@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvFaq"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="3dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvAnswer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tvQuestion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="asdasdasaddsadasdd"
+        android:textColor="@color/black"
+        android:translationZ="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cvFaq"
+        app:layout_constraintEnd_toEndOf="@+id/cvFaq"
+        app:layout_constraintStart_toStartOf="@+id/cvFaq"
+        app:layout_constraintTop_toTopOf="@+id/cvFaq" />
+
+    <TextView
+        android:id="@+id/tvAnswer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="hbjhbhbhjb"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cvFaq"
+        app:layout_constraintStart_toStartOf="@+id/cvFaq"
+        app:layout_constraintTop_toBottomOf="@+id/cvFaq" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/quran"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="@string/quran"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/prayer"
+        app:layout_constraintStart_toStartOf="@+id/prayer"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/prayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/prayer_times"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/quran" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calender"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey_text"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/qibla"
+        app:layout_constraintStart_toStartOf="@+id/qibla"
+        app:layout_constraintTop_toBottomOf="@+id/prayer"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/qibla"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/qibla"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/settings"
+        app:layout_constraintStart_toStartOf="@+id/settings"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"/>
+
+    <TextView
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey_text"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/mosque"
+        app:layout_constraintStart_toStartOf="@+id/mosque"
+        app:layout_constraintTop_toBottomOf="@+id/qibla"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/mosque"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mosque"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/zakat"
+        app:layout_constraintStart_toStartOf="@+id/zakat"
+        app:layout_constraintTop_toBottomOf="@+id/settings"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/zakat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zakat"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/mecca"
+        app:layout_constraintStart_toStartOf="@+id/mecca"
+        app:layout_constraintTop_toBottomOf="@+id/mosque" />
+
+    <TextView
+        android:id="@+id/mecca"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/live_mecca"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/medina"
+        app:layout_constraintStart_toStartOf="@+id/medina"
+        app:layout_constraintTop_toBottomOf="@+id/zakat" />
+
+    <TextView
+        android:id="@+id/medina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/live_medina"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/asmaAlHusna"
+        app:layout_constraintStart_toStartOf="@+id/asmaAlHusna"
+        app:layout_constraintTop_toBottomOf="@+id/mecca" />
+
+    <TextView
+        android:id="@+id/asmaAlHusna"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/asmaalhusna"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/grey"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/removeAds"
+        app:layout_constraintStart_toStartOf="@+id/removeAds"
+        app:layout_constraintTop_toBottomOf="@+id/medina" />
+
+    <TextView
+        android:id="@+id/removeAds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/premium"
+        android:textColor="@color/purple_dark"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/share"
+        app:layout_constraintStart_toStartOf="@id/share"
+        app:layout_constraintTop_toBottomOf="@+id/asmaAlHusna" />
+
+    <TextView
+        android:id="@+id/share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/share"
+        android:textColor="@color/purple_dark"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/review"
+        app:layout_constraintStart_toStartOf="@id/review"
+        app:layout_constraintTop_toBottomOf="@+id/removeAds" />
+
+    <TextView
+        android:id="@+id/review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:padding="10dp"
+        android:text="@string/review"
+        android:textColor="@color/purple_dark"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/share" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">القران كريم</string>
+    <string name="last_read">"  آخر قراءة"</string>
+    <string name="asmaalhusna">أسماء الحسنى</string>
+    <string name="names_of_allah">99 أسماء الله الحسنى</string>
+    <string name="faqs">أسئلة وأجوبة</string>
+    <string name="prayer">نماز</string>
+    <string name="time">وقت</string>
+    <string name="notification">إشعار</string>
+    <string name="fajr">الفجر</string>
+    <string name="dhuhr">الظهر</string>
+    <string name="asr">العصر</string>
+    <string name="maghrib">المغرب</string>
+    <string name="isha">العشاء</string>
+    <string name="kaaba_coordinates">إحداثيات الكعبة</string>
+    <string name="zakat_payable">الزكاة المستحقة</string>
+    <string name="choose_currency">اختر العملة</string>
+    <string name="choose_nisab">اختر مقياس نصاب</string>
+    <string name="enter_nisab">أدخل قيمة نصاب</string>
+    <string name="enter_assets">أدخل قيمة الأصول</string>
+    <string name="quran">القرآن</string>
+    <string name="prayer_times">أوقات الصلاة</string>
+    <string name="qibla">القبلة</string>
+    <string name="mosque">مسجد</string>
+    <string name="zakat">زكاة</string>
+    <string name="live_mecca">عيش مكة</string>
+    <string name="live_medina">عيش المدينة المنورة</string>
+    <string name="review">مراجعة</string>
+    <string name="loading">تحميل</string>
+    <string name="please_wait">انتظر من فضلك</string>
+    <string name="playing">تلعب</string>
+    <string name="msg_permission_require">إذن الموقع مطلوب لهذه الميزة</string>
+    <string name="msg_connect_internet">اتصل باتصال إنترنت مستقر</string>
+    <string name="msg_no_mosque">لم يتم العثور على مسجد بالقرب منك</string>
+    <string name="msg_check_gps">يرجى التحقق من إعدادات GPS</string>
+    <string name="msg_try_later">هناك خطأ ما. حاول مرة أخرى في وقت لاحق</string>
+    <string name="alert">يُحذًِر</string>
+    <string name="alarm_push">%1$s وقت صلاة</string>
+    <string name="settings">إعدادات</string>
+    <string name="exit">مخرج</string>
+    <string name="msg_exit">هل أنت متأكد أنك تريد الخروج؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="share">يشارك</string>
+    <string name="in">في</string>
+    <string name="share_data">ااحصل على القرآن ومواقيت الصلاة وبوصلة القبلة والمزيد ، كل ذلك في تطبيق واحد. \ n \ n
+    التنزيل مجانًا! \ n
+    https://play.google.com/store/apps/details?id=com.myisolutions.quran</string>
+    <string-array name="nisab_keys">
+        <item>ذهب</item>
+        <item>فضة</item>
+    </string-array>
+    <string-array name="faqs_keys">
+        <item>ما هي الزكاة؟</item>
+        <item>ما هو نصاب؟</item>
+        <item>كيف يحسب النصاب؟</item>
+        <item>هل يجب علي استخدام نصاب الذهب أم الفضة؟</item>
+        <item>كم هي الزكاة؟</item>
+        <item>على من تجب الزكاة؟</item>
+        <item>متى يتم إخراج الزكاة؟</item>
+    </string-array>
+    <string-array name="faqs_values">
+        <item>الزكاة ركن ثالث من أركان الإسلام. إنه يدل على مقدار الثروة التي يدفعها المسلم للفقراء والأقل حظاً.</item>
+        <item>النصاب هو الحد الأدنى لصافي رأس المال الذي يجب أن يمتلكه المسلم حتى يحق له دفع الزكاة.</item>
+        <item>يمكن حساب النصاب إما بالذهب (87.48 جرامًا) أو الفضة (612.36 جرامًا).</item>
+        <item>النصاب المحسوب بالمعيار الفضي أقل بكثير من نظيره من الذهب. وذلك لأن الفضة تراجعت منذ عهد النبي صلى الله عليه وسلم.
+            هناك حجج لاستخدام أي من قيمة النصاب - يقول كثير من العلماء أنه من الأفضل استخدام نصاب الفضة لأنه سيزيد من مقدار الصدقة الموزعة ، ويقول آخرون أن نصاب الذهب أقرب إلى النصاب المستخدم في زمن المبارك. النبي صلى الله عليه وسلم.</item>
+        <item>يجب أن يصل تبرعك للزكاة إلى 2.5٪ من إجمالي ثروتك.</item>
+        <item>كل المسلمين الرائد (بليغ) عاقلين ويلتقون بقيم النصاب.</item>
+        <item>الزكاة لا تصبح واجبة إلا بعد مرور عام قمري كامل ، بشرط أن تكون ثروتك المؤهلة محتجزة لمدة عام كامل. لذلك ، تبدأ سنة الزكاة في التاريخ الذي تساوي فيه ثروتك النصاب أو تجاوزته لأول مرة ، ويجب احتسابها في ذلك التاريخ لكل سنة لاحقة.
+            على الرغم من أنه يمكنك إعطاء الزكاة في أي وقت من العام ، يختار العديد من المسلمين دفع الزكاة خلال شهر رمضان المبارك. هذا لأن مكافآت وبركات العطاء في هذا الشهر أكبر بكثير مما كانت عليه في أي وقت آخر من العام.</item>
+    </string-array>
+    <string-array name="currencies_keys">
+        <item>AED - درهم إماراتي</item>
+        <item>DZD - الدينار الجزائري</item>
+        <item>EUR - اليورو</item>
+        <item>GBP - الجنيه البريطاني</item>
+        <item>IDR - الروبية الاندونيسية</item>
+        <item>INR - روبية هندية</item>
+        <item>JOD - دينار أردني</item>
+        <item>LBP - ليرة لبنانية</item>
+        <item>MAD - درهم مغربي</item>
+        <item>MYR - رينغيت ماليزي</item>
+        <item>PKR - روبية باكستانية</item>
+        <item>TRY - الليرة التركية</item>
+        <item>USD - دولار أمريكي</item>
+    </string-array>
+</resources>

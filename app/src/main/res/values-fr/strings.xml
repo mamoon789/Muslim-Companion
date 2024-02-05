@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Le Coran</string>
+    <string name="last_read">"  Dernière lecture"</string>
+    <string name="asmaalhusna">Asma Al-Husna</string>
+    <string name="names_of_allah">99 Noms d\'Allah</string>
+    <string name="faqs">FAQ</string>
+    <string name="prayer">Prière</string>
+    <string name="time">Temps</string>
+    <string name="notification">Notification</string>
+    <string name="fajr">Fajr</string>
+    <string name="dhuhr">Dhuhr</string>
+    <string name="asr">Asr</string>
+    <string name="maghrib">Maghrib</string>
+    <string name="isha">Isha</string>
+    <string name="kaaba_coordinates">Coordonnées Kaaba</string>
+    <string name="zakat_payable">Zakat à payer est</string>
+    <string name="choose_currency">Choisir la devise</string>
+    <string name="choose_nisab">Choisissez la mesure Nisab</string>
+    <string name="enter_nisab">Entrez la valeur Nisab</string>
+    <string name="enter_assets">Entrez la valeur des actifs</string>
+    <string name="quran">Coran</string>
+    <string name="prayer_times">Horaires de prière</string>
+    <string name="qibla">Qibla</string>
+    <string name="mosque">Mosquée</string>
+    <string name="zakat">Zakat</string>
+    <string name="live_mecca">La Mecque en direct</string>
+    <string name="live_medina">Médine en direct</string>
+    <string name="review">Critique</string>
+    <string name="loading">Chargement</string>
+    <string name="please_wait">S\'il vous plaît, attendez</string>
+    <string name="playing">Jouant</string>
+    <string name="msg_permission_require">Autorisation de localisation requise pour cette fonctionnalité</string>
+    <string name="msg_connect_internet">Connectez-vous à une connexion Internet stable</string>
+    <string name="msg_no_mosque">Aucune mosquée trouvée près de chez vous</string>
+    <string name="msg_check_gps">Veuillez vérifier les paramètres GPS</string>
+    <string name="msg_try_later">Quelque chose s\'est mal passé. Réessayez plus tard</string>
+    <string name="alert">Alerte</string>
+    <string name="alarm_push">Temps pour %1$s prière</string>
+    <string name="settings">Paramètres</string>
+    <string name="exit">Sortie</string>
+    <string name="msg_exit">Êtes-vous sûr de vouloir quitter?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="share">Partager</string>
+    <string name="in">dans</string>
+    <string name="share_data">Obtenez le Coran, les horaires de prière, la boussole Qibla et bien plus encore, le tout dans une seule application.\n\n
+    Téléchargez gratuitement !\n
+        https://play.google.com/store/apps/details?id=com.myisolutions.quran</string>
+    <string-array name="nisab_keys">
+        <item>Or</item>
+        <item>Argent</item>
+    </string-array>
+    <string-array name="faqs_keys">
+        <item>Qu\'est-ce que la Zakat?</item>
+        <item>Qu\'est-ce que Nisab?</item>
+        <item>Comment calculer Nisab?</item>
+        <item>Dois-je utiliser Or ou Argent Nisab?</item>
+        <item>Combien coûte la Zakat?</item>
+        <item>Qui doit payer la Zakat?</item>
+        <item>Quand peut-on payer la Zakat?</item>
+    </string-array>
+    <string-array name="faqs_values">
+        <item>La Zakat est le troisième pilier de l\'islam. Cela signifie la quantité de richesse d\'un pays musulman pour les pauvres et les moins privilégiés.</item>
+        <item>Nisab est le montant minimum de capital net qu\'un musulman doit posséder pour pouvoir payer la Zakat.</item>
+        <item>Nisab peut être calculé soit en or (87,48 grammes) soit en argent (612,36 grammes).</item>
+        <item>Le nisab calculé avec l\'étalon argent est nettement inférieur à son homologue or. C\'est parce que la valeur de l\'argent a chuté depuis l\'époque du Prophète (paix soit sur lui).
+            Il y a des arguments pour utiliser l\'une ou l\'autre des valeurs du nisab - de nombreux chercheurs disent qu\'il est préférable d\'utiliser le nisab en argent car cela augmentera le montant de la charité distribuée, d\'autres disent que le nisab en or est plus proche du nisab en usage au moment du bienheureux Prophète (paix soit sur lui).</item>
+        <item>Votre don de Zakat devrait s\'élever à 2,5 % de votre patrimoine total.</item>
+        <item>Tous les musulmans qui sont majeurs (Baligh), sains d\'esprit et qui respectent les valeurs de Nisab.</item>
+        <item>La Zakat ne devient obligatoire qu\'une fois qu\'une année lunaire complète s\'est écoulée, à condition que votre patrimoine éligible ait été détenu pendant une année complète. Votre année Zakat commence donc à la date à laquelle votre richesse a égalé ou dépassé pour la première fois le Nisab et doit être calculée à cette date pour chaque année suivante.
+            Bien que vous puissiez donner la Zakat à tout moment de l\'année, de nombreux musulmans choisissent de payer leur Zakat pendant le mois sacré du Ramadan. C\'est parce que les récompenses et les bénédictions de donner ce mois-ci sont bien plus importantes qu\'à tout autre moment de l\'année.</item>
+    </string-array>
+    <string-array name="currencies_keys">
+        <item>AED - Dirham Emirats Arabes Unis</item>
+        <item>DZD - Dinar Algérien</item>
+        <item>EUR - Euro</item>
+        <item>GBP - Livre Sterling</item>
+        <item>IDR - Roupie Indonésienne</item>
+        <item>INR - Roupie Indienne</item>
+        <item>JOD - Dinar Jordanien</item>
+        <item>LBP - Livre libanaise</item>
+        <item>MAD - Dirham Marocain</item>
+        <item>MYR - Ringgit Malaisien</item>
+        <item>PKR - Roupie Pakistanaise</item>
+        <item>TRY - Lire Turque</item>
+        <item>USD - Dollars Américain</item>
+    </string-array>
+</resources>

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.NamazFragment">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.33" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.66" />
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/purple"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:translationZ="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        app:cardBackgroundColor="@color/purple"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/tvAddress"
+        app:layout_constraintStart_toStartOf="@+id/tvAddress"
+        app:layout_constraintTop_toBottomOf="@+id/tvAddress">
+
+        <ImageView
+            android:id="@+id/ivLeft"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center_vertical|start"
+            android:background="@drawable/arrow_left"/>
+
+        <ImageView
+            android:id="@+id/ivRight"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="center_vertical|end"
+            android:background="@drawable/arrow_right"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="12dp">
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/llFajr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:paddingVertical="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/cardView"
+        app:layout_constraintStart_toStartOf="@+id/cardView"
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+        <TextView
+            android:id="@+id/tvFajr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="24dp"
+            android:text="@string/fajr"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvFajrTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="normal" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swFajrAlarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="12dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/grey_light"
+        app:layout_constraintEnd_toEndOf="@+id/llFajr"
+        app:layout_constraintStart_toStartOf="@+id/llFajr"
+        app:layout_constraintTop_toBottomOf="@id/llFajr" />
+
+    <LinearLayout
+        android:id="@+id/llDhuhr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/llFajr"
+        app:layout_constraintStart_toStartOf="@+id/llFajr"
+        app:layout_constraintTop_toBottomOf="@+id/llFajr">
+
+        <TextView
+            android:id="@+id/tvDhuhr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="24dp"
+            android:text="@string/dhuhr"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDhuhrTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="normal" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swDhuhrAlarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="12dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/grey_light"
+        app:layout_constraintEnd_toEndOf="@+id/llDhuhr"
+        app:layout_constraintStart_toStartOf="@+id/llDhuhr"
+        app:layout_constraintTop_toBottomOf="@id/llDhuhr" />
+
+    <LinearLayout
+        android:id="@+id/llAsr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/llDhuhr"
+        app:layout_constraintStart_toStartOf="@+id/llDhuhr"
+        app:layout_constraintTop_toBottomOf="@+id/llDhuhr">
+
+        <TextView
+            android:id="@+id/tvAsr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="24dp"
+            android:text="@string/asr"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAsrTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="normal" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swAsrAlarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="12dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/grey_light"
+        app:layout_constraintEnd_toEndOf="@+id/llAsr"
+        app:layout_constraintStart_toStartOf="@+id/llAsr"
+        app:layout_constraintTop_toBottomOf="@id/llAsr" />
+
+    <LinearLayout
+        android:id="@+id/llMaghrib"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/llAsr"
+        app:layout_constraintStart_toStartOf="@+id/llAsr"
+        app:layout_constraintTop_toBottomOf="@+id/llAsr">
+
+        <TextView
+            android:id="@+id/tvMaghrib"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="24dp"
+            android:text="@string/maghrib"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvMaghribTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="normal" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swMaghribAlarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="12dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/grey_light"
+        app:layout_constraintEnd_toEndOf="@+id/llMaghrib"
+        app:layout_constraintStart_toStartOf="@+id/llMaghrib"
+        app:layout_constraintTop_toBottomOf="@id/llMaghrib" />
+
+    <LinearLayout
+        android:id="@+id/llIsha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="24dp"
+        app:layout_constraintEnd_toEndOf="@+id/llMaghrib"
+        app:layout_constraintStart_toStartOf="@+id/llMaghrib"
+        app:layout_constraintTop_toBottomOf="@+id/llMaghrib">
+
+        <TextView
+            android:id="@+id/tvIsha"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="24dp"
+            android:text="@string/isha"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvIshaTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="normal" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swIshaAlarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingEnd="12dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
