@@ -613,6 +613,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         grantResults: IntArray
     )
     {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 0 && grantResults.isNotEmpty())
         {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)

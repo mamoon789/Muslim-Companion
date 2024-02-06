@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -400,11 +401,22 @@ class NamazFragment : BaseFragment(), BaseFragment.Namaz
     override fun getNamazTimings()
     {
         val geocoder = Geocoder(mainActivity, Locale.getDefault())
-        geocoder.getFromLocation(lat, long, 1) { addressList ->
-            if (addressList.size > 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        {
+            geocoder.getFromLocation(lat, long, 1) { addressList ->
+                if (addressList.size > 0)
+                {
+                    val locality = addressList.first().locality
+                    val country = addressList.first().countryName
+                    tvAddress.text = " $locality, $country"
+                }
+            }
+        }else{
+            val addressList = geocoder.getFromLocation(lat,long,1)
+            if (addressList != null && addressList.size > 0)
             {
-                val locality = addressList[0].locality
-                val country = addressList[0].countryName
+                val locality = addressList.first().locality
+                val country = addressList.first().countryName
                 tvAddress.text = " $locality, $country"
             }
         }
