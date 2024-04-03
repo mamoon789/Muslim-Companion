@@ -29,7 +29,6 @@ import com.iqra.alquran.network.models.Quran.Data.Surah
 class QuranNavFragment : Fragment() {
     private lateinit var adapter: ViewPagerFragmentAdapter
     private lateinit var surahs: MutableList<Surah>
-    private lateinit var language: String
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var cv: CardView
@@ -59,7 +58,6 @@ class QuranNavFragment : Fragment() {
         )
 
         surahs = (activity as MainActivity).surahs
-        language = (activity as MainActivity).language
 
         adapter = ViewPagerFragmentAdapter(
             childFragmentManager,

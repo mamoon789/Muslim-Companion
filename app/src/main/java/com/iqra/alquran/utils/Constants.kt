@@ -67,7 +67,7 @@ object Constants {
     )
     val AR_FONTS = mapOf(
         "font 5" to "Scheherazade",
-        "font 8" to "indopak_font"
+        "font 8" to "font"
 //        "font 1" to "Tajawal",
 //        "font 2" to "Amiri",
 //        "font 3" to "Almarai",
@@ -90,7 +90,7 @@ object Constants {
         "font 5" to "Scheherazade",
         "font 6" to "Harmattan",
         "font 7" to "Mirza",
-        "font 8" to "indopak_font"
+        "font 8" to "font"
     )
     //endregion
 }

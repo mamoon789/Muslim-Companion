@@ -18,7 +18,6 @@ import com.iqra.alquran.network.models.Quran.Data.Surah
 
 class QuranBookmarkPagerFragment : Fragment() {
     private lateinit var surahs: MutableList<Surah>
-    lateinit var edition: String
     private var bookmarksList: MutableList<String>? = null
     private var adapter: QuranBookmarkPagerFragment.Adapter? = null
     private var sharedPreferences: SharedPreferences? = null
@@ -28,7 +27,6 @@ class QuranBookmarkPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         surahs = (activity as MainActivity).surahs
-        edition = (activity as MainActivity).language
 
         sharedPreferences = activity?.getSharedPreferences(
             "Settings",

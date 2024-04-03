@@ -3,6 +3,7 @@ package com.iqra.alquran.views
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface.OnClickListener
 import android.content.Intent
 import android.content.IntentSender.SendIntentException
 import android.content.SharedPreferences
@@ -49,6 +50,7 @@ import com.iqra.alquran.R
 import com.iqra.alquran.network.models.Quran
 import com.iqra.alquran.utils.Billing
 import com.iqra.alquran.utils.Constants
+import com.iqra.alquran.utils.Utility
 import com.iqra.alquran.worker.AlarmWorker
 import com.yarolegovich.slidingrootnav.SlideGravity
 import com.yarolegovich.slidingrootnav.SlidingRootNav
@@ -81,7 +83,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
     private lateinit var lastView: View
 
     lateinit var surahs: MutableList<Quran.Data.Surah>
-    lateinit var language: String
 
     private lateinit var appUpdateManager: AppUpdateManager
     private lateinit var reviewManager: ReviewManager
@@ -176,15 +177,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
 
         billing = Billing(this)
 
-        val quran = getQuran()
-        surahs = quran.data.surahs
-        language = quran.data.edition.language
+        surahs = Utility.getQuran(this).data.surahs
 
         AlarmWorker.updateAlarms(this, false)
 
 //        if (savedInstanceState == null)
 //        {
-            showFragment(SplashFragment.newInstance())
+        showFragment(SplashFragment.newInstance())
 //        } else
 //        {
 //            val meccaFragment = supportFragmentManager.findFragmentByTag(Constants.VIDEO_ID_MECCA)
@@ -291,11 +290,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         getQuranSettings()
 
         val quranJson = StringBuilder()
-        val inputStream = assets?.open(
+        val inputStream = assets.open(
             Constants.CURRENT_SCRIPT + "_" + Constants.CURRENT_TRANSLATION + ".json"
 //            Constants.CURRENT_SCRIPT +".json"
-
-        )!!
+        )
         val bufferedReader = BufferedReader(InputStreamReader(inputStream))
         var line: String?
         while (bufferedReader.readLine().also { line = it } != null)
@@ -336,36 +334,40 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
     {
         val adRequest = AdRequest.Builder().build()
 
-        InterstitialAd.load(this, Constants.INTERSTITIAL_AD_ID, adRequest, object : InterstitialAdLoadCallback()
-        {
-            override fun onAdFailedToLoad(adError: LoadAdError)
+        InterstitialAd.load(
+            this,
+            Constants.INTERSTITIAL_AD_ID,
+            adRequest,
+            object : InterstitialAdLoadCallback()
             {
-                interstitialAd = null
-            }
+                override fun onAdFailedToLoad(adError: LoadAdError)
+                {
+                    interstitialAd = null
+                }
 
-            override fun onAdLoaded(interstitialAd: InterstitialAd)
-            {
-                this@MainActivity.interstitialAd = interstitialAd
+                override fun onAdLoaded(interstitialAd: InterstitialAd)
+                {
+                    this@MainActivity.interstitialAd = interstitialAd
 
-                this@MainActivity.interstitialAd?.fullScreenContentCallback =
-                    object : FullScreenContentCallback()
-                    {
-                        override fun onAdDismissedFullScreenContent()
+                    this@MainActivity.interstitialAd?.fullScreenContentCallback =
+                        object : FullScreenContentCallback()
                         {
-                            // Called when ad is dismissed.
-                            Constants.INTERSTITIAL_AD_SHOWN = false
+                            override fun onAdDismissedFullScreenContent()
+                            {
+                                // Called when ad is dismissed.
+                                Constants.INTERSTITIAL_AD_SHOWN = false
+                            }
+
+                            override fun onAdShowedFullScreenContent()
+                            {
+                                // Called when ad is shown.
+                                Constants.INTERSTITIAL_AD_SHOWN = true
+                            }
                         }
 
-                        override fun onAdShowedFullScreenContent()
-                        {
-                            // Called when ad is shown.
-                            Constants.INTERSTITIAL_AD_SHOWN = true
-                        }
-                    }
-
-                this@MainActivity.interstitialAd?.show(this@MainActivity)
-            }
-        })
+                    this@MainActivity.interstitialAd?.show(this@MainActivity)
+                }
+            })
     }
 
     override fun onClick(v: View?)
@@ -380,6 +382,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                 showFragment(QuranNavFragment.newInstance())
                 resetSideMenuColor()
             }
+
             R.id.prayer ->
             {
                 if (checkInternetConnection())
@@ -397,6 +400,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                     }
                 }
             }
+
             R.id.settings ->
             {
                 toolbar.title = resources.getString(R.string.settings)
@@ -406,6 +410,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                 showFragment(SettingsFragment.newInstance())
                 resetSideMenuColor()
             }
+
             R.id.mosque ->
             {
                 if (checkInternetConnection())
@@ -421,6 +426,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                     }
                 }
             }
+
             R.id.zakat ->
             {
                 if (checkInternetConnection())
@@ -432,6 +438,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                     resetSideMenuColor()
                 }
             }
+
             R.id.qibla ->
             {
                 if (checkInternetConnection())
@@ -449,6 +456,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                     }
                 }
             }
+
             R.id.mecca ->
             {
                 if (checkInternetConnection())
@@ -458,6 +466,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                     resetSideMenuColor()
                 }
             }
+
             R.id.medina ->
             {
                 if (checkInternetConnection())
@@ -467,6 +476,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                     resetSideMenuColor()
                 }
             }
+
             R.id.asmaAlHusna ->
             {
                 if (checkInternetConnection())
@@ -478,6 +488,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                     resetSideMenuColor()
                 }
             }
+
             R.id.share ->
             {
                 val intent = Intent(Intent.ACTION_SEND)
@@ -490,6 +501,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                     )
                 )
             }
+
             R.id.review ->
             {
                 if (checkInternetConnection())
@@ -500,6 +512,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                     startActivity(openURL)
                 }
             }
+
             R.id.removeAds ->
             {
                 if (checkInternetConnection())
@@ -531,7 +544,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         (lastView as TextView).setTextColor(getColor(R.color.purple))
     }
 
-    fun showCustomDialog(layout: Int = -1)
+    fun showCustomDialog(
+        layout: Int = -1,
+        title: String = getString(R.string.exit),
+        message: String = getString(R.string.msg_exit),
+        positiveTxt: String = getString(R.string.yes),
+        negativeTxt: String = getString(R.string.no),
+        positiveListener: OnClickListener = OnClickListener { _, _ ->  exitProcess(0)},
+        negativeListener: OnClickListener = OnClickListener { _, _ ->  hideDialog()}
+    )
     {
         if (progressDialog == null)
         {
@@ -540,14 +561,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                 -1 ->
                 {
                     progressDialog = AlertDialog.Builder(this).apply {
-                        setTitle(getString(R.string.exit))
-                        setMessage(getString(R.string.msg_exit))
-                        setPositiveButton(getString(R.string.yes)) { _, _ ->
-                            exitProcess(0)
-                        }
-                        setNegativeButton(getString(R.string.no)) { _, _ ->
-                            hideDialog()
-                        }
+                        setTitle(title)
+                        setMessage(message)
+                        setPositiveButton(positiveTxt, positiveListener)
+                        setNegativeButton(negativeTxt, negativeListener)
                     }.create()
                 }
                 else ->

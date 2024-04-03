@@ -2,22 +2,30 @@ package com.iqra.alquran.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.content.pm.PackageManager.ResolveInfoFlags
+import android.content.pm.ResolveInfo
+import android.content.pm.ServiceInfo
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
+import android.speech.tts.TextToSpeech.EngineInfo
 import android.speech.tts.UtteranceProgressListener
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.iqra.alquran.BuildConfig
 import com.iqra.alquran.R
 import com.iqra.alquran.network.models.Quran.Data.Surah
 import com.iqra.alquran.utils.Constants
@@ -25,7 +33,6 @@ import com.iqra.alquran.utils.Utility
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.Serializable
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")
@@ -39,7 +46,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
     lateinit var btBookmark: ToggleButton
 
     lateinit var surahs: MutableList<Surah>
-    lateinit var edition: String
+    val edition = BuildConfig.EDITION
 
     private lateinit var tts: TextToSpeech
     private lateinit var wv: WebView
@@ -61,7 +68,6 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
     ): View?
     {
         surahs = (activity as MainActivity).surahs
-        edition = (activity as MainActivity).language
         arguments?.let {
             surahIndex = it.getInt("surahIndex", 0)
             ayahIndex = it.getInt("ayahIndex", 0)
@@ -107,7 +113,37 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
             mp = null
             tts.stop()
 
-            print()
+            val result = tts.setLanguage(Locale(BuildConfig.EDITION,"US"))
+            Log.d("voice: ", "${tts.voice}")
+            for (v in tts.voices){
+                Log.d("voice: ", "$v")
+            }
+            if (!translationActive || result == TextToSpeech.LANG_AVAILABLE)
+            {
+                print()
+                return@setOnClickListener
+            }
+
+            (activity as MainActivity).showCustomDialog(
+                title = "Alert",
+                message = "This device doesn't support ${Locale(BuildConfig.EDITION).displayName}. " +
+                        "To hear the translation, download the ${Locale(BuildConfig.EDITION).displayName} voice data.",
+                positiveTxt = "Download",
+                negativeTxt = "Skip",
+                positiveListener = { _, _ ->
+                    (activity as MainActivity).hideDialog()
+                    Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA).apply {
+                        setPackage("com.google.android.tts")
+                        startActivity(this)
+                    }
+                    audioRunning = false
+                    btPlayback.isChecked = false
+                    print()
+                },
+                negativeListener = { _, _ ->
+                    (activity as MainActivity).hideDialog()
+                    print()
+                })
         }
 
         btPlayback.setOnClickListener {
@@ -145,9 +181,9 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
             }
         }
 
-        tts = TextToSpeech(activity?.applicationContext) { status ->
-            if (status == TextToSpeech.SUCCESS)
-            {
+        tts = TextToSpeech(activity?.applicationContext, {
+//            if (status == TextToSpeech.SUCCESS)
+//            {
 //                val enVoices: HashSet<Voice> = HashSet()
 //                for (voice in tts.voices) {
 //                    if (voice.name.contains(edition) && voice.name.contains("en-us",true)) {
@@ -159,10 +195,10 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
 //                tts.voice = enVoices.toArray()[enVoices.size - 3] as Voice?
 //                tts.voice = enVoices.toArray()[0] as Voice?
 //                tts.language = Locale.UK
-                tts.setSpeechRate(1.0f)
-                tts.setPitch(1.0f)
-            }
-        }
+//                tts.setSpeechRate(1.0f)
+//                tts.setPitch(1.0f)
+//            }
+        },"com.google.android.tts")
 
         tts.setOnUtteranceProgressListener(object : UtteranceProgressListener()
         {
@@ -187,6 +223,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                 }
             }
 
+            @Deprecated("Deprecated")
             override fun onError(utteranceId: String?)
             {
             }
@@ -383,9 +420,9 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                 "}\n" +
                 ".ar {\n" +
                 "   font-family: ${Constants.CURRENT_SCRIPT_FONT};\n" +
+                "   font-size: 175%;\n" +
                 "   padding-top: 5px;\n" +
                 "   padding-bottom: 10px;\n" +
-                "   font-size: 175%;\n" +
                 "   direction: rtl;\n" +
                 "}\n" +
                 ".ur {\n" +
@@ -611,5 +648,11 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
         mp?.release()
         mp = null
         tts.stop()
+    }
+
+    override fun onDestroy()
+    {
+        super.onDestroy()
+        tts.shutdown()
     }
 }

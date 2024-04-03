@@ -1,80 +1,79 @@
+@file:Suppress("SpellCheckingInspection")
+
 package com.iqra.alquran.utils
 
+import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
+import com.iqra.alquran.BuildConfig
+import com.iqra.alquran.R
 import com.iqra.alquran.network.models.Quran
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import com.iqra.alquran.network.models.Quran.Data.Surah
 
-class Utility {
-    companion object {
-        //region ADD VERSE AUDIO & TRANSLATION
-        fun addVerse(
-            activity: FragmentActivity?,
-            surahs: MutableList<Surah>,
-            translationFile: String
-        ): MutableList<Surah> {
-            val quranJson = StringBuilder()
-            var inputStream = activity?.assets?.open(translationFile)!!
-            var bufferedReader = BufferedReader(InputStreamReader(inputStream))
-            var line: String?
-            while (bufferedReader.readLine().also { line = it } != null) {
-                quranJson.append(line)
-                quranJson.append('\n')
-            }
-            inputStream.close()
-            bufferedReader.close()
-            val quranTranslation = Gson().fromJson(quranJson.toString(), Quran::class.java)
+class Utility
+{
+    companion object
+    {
+        fun getQuran(activity: FragmentActivity): Quran
+        {
+            val inputStream = activity.assets.open("quran.json")
+            val quranJson = inputStream.bufferedReader().use { it.readText() }
+            return Gson().fromJson(quranJson, Quran::class.java)
+        }
 
-            quranJson.clear()
-            inputStream = activity.assets?.open("audio.json")!!
-            bufferedReader = BufferedReader(InputStreamReader(inputStream))
-            line = ""
-            while (bufferedReader.readLine().also { line = it } != null) {
-                quranJson.append(line)
-                quranJson.append('\n')
-            }
-            inputStream.close()
-            bufferedReader.close()
-            val quranAudio = Gson().fromJson(quranJson.toString(), Quran::class.java)
+        private fun getSurahs(activity: FragmentActivity): MutableList<Surah>
+        {
+            var inputStream = activity.assets.open("translation.json")
+            var quranJson = inputStream.bufferedReader().use { it.readText() }
+            val surahsTranslation = Gson().fromJson(quranJson, Quran::class.java).data.surahs
 
-            for (i in surahs.indices) {
-                for (j in surahs[i].ayahs.indices) {
-                    surahs[i].ayahs[j].audio = quranAudio.data.surahs[i].ayahs[j].audio
-                    surahs[i].ayahs[j].translation = quranTranslation.data.surahs[i].ayahs[j].text
+            inputStream = activity.assets.open("audio.json")
+            quranJson = inputStream.bufferedReader().use { it.readText() }
+            val surahsAudio = Gson().fromJson(quranJson, Quran::class.java).data.surahs
+
+            val surahs = getQuran(activity).data.surahs
+            for (i in surahs.indices)
+            {
+                for (j in surahs[i].ayahs.indices)
+                {
+                    surahs[i].ayahs[j].audio = surahsAudio[i].ayahs[j].audio
+                    surahs[i].ayahs[j].translation = surahsTranslation[i].ayahs[j].text
                 }
             }
             return surahs
         }
-        //endregion
 
-        fun makeHtmlBodyWithTranslation(
-            _body: String,
-            surahs: MutableList<Surah>,
-            edition: String
-        ): String {
-            val juzArray: MutableList<String> = mutableListOf()
+        fun makeHtmlBodyWithTranslation(activity: FragmentActivity)
+        {
+            val surahs = getSurahs(activity)
+            val juzs = mutableListOf<String>()
             var juz = 1
-            var body = _body
-            for (surah in surahs) {
+            var body = ""
+            for (surah in surahs)
+            {
                 var ruku = surah.ayahs[0].ruku
 
                 body += "<div class='ar'>\n"
                 body += "<h2>${surah.name}</h2>\n"
                 body += "</div>\n"
 
-                for (item in surah.ayahs.indices) {
-                    if (surah.ayahs[item].juz > juz) {
-                        juzArray.add(body)
+                for (item in surah.ayahs.indices)
+                {
+                    if (surah.ayahs[item].juz > juz)
+                    {
+                        juzs.add(body)
                         juz = surah.ayahs[item].juz
-                        body = _body
+                        body = ""
                     }
                     val ayah = surah.ayahs[item]
 
-                    when {
-                        ayah.numberInSurah == surah.ayahs.size -> {
+                    when
+                    {
+                        ayah.numberInSurah == surah.ayahs.size ->
+                        {
                             body += "<div class='ar'>\n"
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}' onClick='scrollToAyahAndTranslation(id)'>" +
                                     ayah.text +
@@ -85,12 +84,14 @@ class Utility {
                                     "</span>\n"
                             body += "</div>\n"
 
-                            body += "<div class='$edition'>\n"
+                            body += "<div class='${BuildConfig.EDITION}'>\n"
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}_tr'>${ayah.translation}</span>\n"
                             body += "</div>\n"
                             body += "<hr>\n"
                         }
-                        ruku != surah.ayahs[item + 1].ruku -> {
+
+                        ruku != surah.ayahs[item + 1].ruku ->
+                        {
                             body += "<div class='ar'>\n"
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}' onClick='scrollToAyahAndTranslation(id)'>" +
                                     ayah.text +
@@ -101,14 +102,16 @@ class Utility {
                                     "</span>\n"
                             body += "</div>\n"
 
-                            body += "<div class='$edition'>\n"
+                            body += "<div class='${BuildConfig.EDITION}'>\n"
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}_tr'>${ayah.translation}</span>\n"
                             body += "</div>\n"
                             body += "<hr>\n"
 
                             ruku = surah.ayahs[item + 1].ruku
                         }
-                        else -> {
+
+                        else ->
+                        {
                             body += "<div class='ar'>\n"
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}' onClick='scrollToAyahAndTranslation(id)'>" +
                                     ayah.text +
@@ -116,40 +119,45 @@ class Utility {
                                     "</span>\n"
                             body += "</div>\n"
 
-                            body += "<div class='$edition'>\n"
+                            body += "<div class='${BuildConfig.EDITION}'>\n"
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}_tr'>${ayah.translation}</span>\n"
                             body += "</div>\n"
                         }
                     }
                 }
             }
-            juzArray.add(body)
-            return body
+            juzs.add(body)
         }
 
-        fun makeHtmlBodyWithoutTranslation(_body: String, surahs: MutableList<Surah>): String {
-
-            val juzArray: MutableList<String> = mutableListOf()
+        fun makeHtmlBodyWithoutTranslation(activity: FragmentActivity)
+        {
+            val surahs = getSurahs(activity)
+            val juzs = mutableListOf<String>()
             var juz = 1
-            var body = _body
+            var body = ""
             body += "<div class='ar'>\n"
 
-            for (surah in surahs) {
+            for (surah in surahs)
+            {
                 body += "<h2>${surah.name}</h2>\n"
 
                 var ruku = surah.ayahs[0].ruku
 
-                for (i in surah.ayahs.indices) {
-                    if (surah.ayahs[i].juz > juz) {
-                        juzArray.add(body)
+                for (i in surah.ayahs.indices)
+                {
+                    if (surah.ayahs[i].juz > juz)
+                    {
+                        juzs.add(body)
                         juz = surah.ayahs[i].juz
-                        body = _body
+                        body = ""
                     }
 
                     val ayah = surah.ayahs[i]
 
-                    when {
-                        ayah.numberInSurah == surah.ayahs.size -> {
+                    when
+                    {
+                        ayah.numberInSurah == surah.ayahs.size ->
+                        {
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}' onClick='scrollToAyah(id)'>" +
                                     ayah.text +
                                     "<div class='containerRuku'>" +
@@ -158,7 +166,9 @@ class Utility {
                                     "</div>" +
                                     "</span><hr>\n"
                         }
-                        ruku != surah.ayahs[i + 1].ruku -> {
+
+                        ruku != surah.ayahs[i + 1].ruku ->
+                        {
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}' onClick='scrollToAyah(id)'>" +
                                     ayah.text +
                                     "<div class='containerRuku'>" +
@@ -168,7 +178,9 @@ class Utility {
                                     "</span><hr>\n"
                             ruku = surah.ayahs[i + 1].ruku
                         }
-                        else -> {
+
+                        else ->
+                        {
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}' onClick='scrollToAyah(id)'>" +
                                     ayah.text +
                                     "<span class='containerAyah'>${ayah.numberInSurah}</span>" +
@@ -178,66 +190,20 @@ class Utility {
                 }
             }
             body += "</div>\n"
-            juzArray.add(body)
-            return body
+            juzs.add(body)
         }
 
         fun getHtmlBody(
             activity: FragmentActivity?,
             juz: String,
             translationActive: Boolean
-        ): String {
-//            val surahs = StringBuilder()
-            val inputStream: InputStream =
-                if (translationActive) activity?.assets?.open("juz_en/${juz}")!!
-                else activity?.assets?.open("juz/${juz}")!!
-//            if (translationActive) {
-//                inputStream =
-//                    activity?.assets?.open(Constants.CURRENT_SCRIPT + "_" + Constants.CURRENT_TRANSLATION + ".html")!!
-//            } else {
-//                inputStream =
-//                    activity?.assets?.open(Constants.CURRENT_SCRIPT + ".html")!!
-//            }
-//            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-//            var line: String?
-//            while (bufferedReader.readLine().also { line = it } != null) {
-//                surahs.append(line)
-//                surahs.append('\n')
-//            }
-//            inputStream.close()
-//            bufferedReader.close()
-//            return surahs.toString()
+        ): String
+        {
+            if (activity == null) return ""
+            val inputStream =
+                if (translationActive) activity.assets.open("juz_translation/${juz}")
+                else activity.assets.open("juz/${juz}")
             return inputStream.bufferedReader().use { it.readText() }
         }
-
-        //region REPLACE EXISTING VERSE OF UTHMANI SCRIPT WITH THE VERSE OF INDOPAK SCRIPT
-        fun replaceVerse(
-            activity: FragmentActivity?,
-            surahs: MutableList<Surah>
-        ): MutableList<Surah> {
-            for (i in 1..114) {
-                val fileName = "$i.json"
-                val inputStream = activity?.assets?.open(fileName)!!
-                val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-                var line: String?
-                var index = 0
-                while (bufferedReader.readLine().also { line = it } != null) {
-                    if (line!!.length > 13) {
-                        line = line?.substringAfterLast(": ")?.substringBeforeLast('"')
-                            ?.substringAfterLast('"')
-
-                        line = line?.replace("\\p{C}".toRegex(), "")
-                        line = line?.replace("\\s+".toRegex(), " ")
-
-                        surahs[i - 1].ayahs[index].text = line!!
-                        index++
-                    }
-                }
-                inputStream.close()
-                bufferedReader.close()
-            }
-            return surahs
-        }
-        //endregion
     }
 }

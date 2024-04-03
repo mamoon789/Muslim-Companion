@@ -16,6 +16,27 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    flavorDimensions "default"
+    productFlavors {
+        english{
+            dimension "default"
+            buildConfigField "String","EDITION","\"en\""
+        }
+        urdu{
+            dimension "default"
+            applicationIdSuffix ".urdu"
+            versionCode 1
+            versionName "1.0"
+            buildConfigField "String","EDITION","\"ur\""
+        }
+        hindi{
+            dimension "default"
+            applicationIdSuffix ".hindi"
+            versionCode 1
+            versionName "1.0"
+            buildConfigField "String","EDITION","\"hi\""
+        }
+    }
 
     buildTypes {
         release {

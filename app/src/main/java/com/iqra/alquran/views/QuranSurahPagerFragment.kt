@@ -17,7 +17,6 @@ import com.iqra.alquran.network.models.Quran.Data.Surah
 @Suppress("UNCHECKED_CAST")
 class QuranSurahPagerFragment : Fragment() {
     lateinit var surahs: MutableList<Surah>
-    lateinit var edition: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +26,6 @@ class QuranSurahPagerFragment : Fragment() {
         val rvSurahs = view.findViewById<RecyclerView>(R.id.rvSurahs)
 
         surahs = (activity as MainActivity).surahs
-        edition = (activity as MainActivity).language
 
         rvSurahs.adapter = Adapter()
         rvSurahs.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)

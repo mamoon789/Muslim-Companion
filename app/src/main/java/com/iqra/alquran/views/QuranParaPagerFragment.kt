@@ -19,14 +19,12 @@ class QuranParaPagerFragment : Fragment() {
     lateinit var surahs: MutableList<Surah>
     lateinit var surahsTemp: MutableList<Surah>
     lateinit var ayahs: MutableList<Ayah>
-    lateinit var edition: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         surahs = (activity as MainActivity).surahs
-        edition = (activity as MainActivity).language
         ayahs = surahs.flatMap { it.ayahs }.distinctBy { it.juz } as MutableList<Ayah>
         surahsTemp = mutableListOf()
         for (ayah in ayahs) {
