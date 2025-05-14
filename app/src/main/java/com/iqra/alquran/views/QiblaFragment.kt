@@ -13,15 +13,21 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
+import com.iqra.alquran.BuildConfig
 import com.iqra.alquran.utils.Compass
 import com.iqra.alquran.utils.Compass.CompassListener
 import com.iqra.alquran.utils.GPSTracker
 import com.iqra.alquran.R
 import com.iqra.alquran.utils.Constants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class QiblaFragment : BaseFragment(), BaseFragment.Qibla {
+class QiblaFragment : BaseFragment(), BaseFragment.Qibla
+{
 
-    private val TAG = "QiblaFinder"
+    lateinit var mainActivity: MainActivity
     private var compass: Compass? = null
     private var arrowViewQiblat: ImageView? = null
     private var imageDial: ImageView? = null
@@ -60,19 +66,23 @@ class QiblaFragment : BaseFragment(), BaseFragment.Qibla {
         map.setOnMapClickListener { }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
-        Places.initialize(activity!!.applicationContext, Constants.API_KEY)
+        mainActivity = activity as MainActivity
+        mainActivity.showPremiumDialogOrAd()
+        Places.initialize(mainActivity, BuildConfig.API_KEY)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_qibla, container, false)
-        activity!!.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    ): View?
+    {
+        mainActivity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        gps = GPSTracker(mainActivity)
 
-        gps = GPSTracker(activity)
+        val view = inflater.inflate(R.layout.fragment_qibla, container, false)
         arrowViewQiblat = view.findViewById(R.id.main_image_qibla)
         imageDial = view.findViewById(R.id.main_image_dial)
 
@@ -81,32 +91,38 @@ class QiblaFragment : BaseFragment(), BaseFragment.Qibla {
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
     }
 
-    override fun onStart() {
+    override fun onStart()
+    {
         super.onStart()
         compass?.start()
     }
 
-    override fun onPause() {
+    override fun onPause()
+    {
         super.onPause()
         compass?.stop()
     }
 
-    override fun onResume() {
+    override fun onResume()
+    {
         super.onResume()
         compass?.start()
     }
 
-    override fun onStop() {
+    override fun onStop()
+    {
         super.onStop()
         compass?.stop()
     }
 
-    private fun setupCompass() {
+    private fun setupCompass()
+    {
         getBearing()
         compass = Compass(activity)
         val cl = CompassListener { azimuth ->
@@ -116,7 +132,8 @@ class QiblaFragment : BaseFragment(), BaseFragment.Qibla {
         compass!!.setListener(cl)
     }
 
-    fun adjustGambarDial(azimuth: Float) {
+    fun adjustGambarDial(azimuth: Float)
+    {
         val animation: Animation = RotateAnimation(
             -currentAzimuth,
             -azimuth,
@@ -132,7 +149,8 @@ class QiblaFragment : BaseFragment(), BaseFragment.Qibla {
         imageDial!!.startAnimation(animation)
     }
 
-    fun adjustArrowQiblat(azimuth: Float) {
+    fun adjustArrowQiblat(azimuth: Float)
+    {
         val qiblaDegree = QiblaDegree
         val animation: Animation = RotateAnimation(
             -currentAzimuth + qiblaDegree,
@@ -147,30 +165,37 @@ class QiblaFragment : BaseFragment(), BaseFragment.Qibla {
         animation.repeatCount = 0
         animation.fillAfter = true
         arrowViewQiblat!!.startAnimation(animation)
-        if (qiblaDegree > 0) {
+        if (qiblaDegree > 0)
+        {
             arrowViewQiblat!!.visibility = View.VISIBLE
-        } else {
+        } else
+        {
             arrowViewQiblat!!.visibility = View.INVISIBLE
             arrowViewQiblat!!.visibility = View.GONE
         }
     }
 
     @SuppressLint("MissingPermission")
-    fun getBearing() {
+    fun getBearing()
+    {
         fetchGPS()
     }
 
-    fun fetchGPS() {
+    fun fetchGPS()
+    {
         var result = 0.0
         gps = GPSTracker(activity)
-        if (gps!!.canGetLocation()) {
+        if (gps!!.canGetLocation())
+        {
             Log.e("TAG", "GPS is on")
             val lat_saya = gps!!.latitude
             val lon_saya = gps!!.longitude
-            if (lat_saya < 0.001 && lon_saya < 0.001) {
+            if (lat_saya < 0.001 && lon_saya < 0.001)
+            {
                 arrowViewQiblat!!.visibility = View.GONE
-                (activity as MainActivity).showSnackBar(getString(R.string.msg_check_gps), false)
-            } else {
+                mainActivity.showSnackBar(getString(R.string.msg_check_gps), false)
+            } else
+            {
                 val longitude2 = 39.826209
                 val latitude2 = Math.toRadians(21.422507)
                 val latitude1 = Math.toRadians(lat_saya)
@@ -183,20 +208,26 @@ class QiblaFragment : BaseFragment(), BaseFragment.Qibla {
                 QiblaDegree = result2
                 arrowViewQiblat!!.visibility = View.VISIBLE
             }
-        } else {
+        } else
+        {
             gps!!.showSettingsAlert()
             arrowViewQiblat!!.visibility = View.GONE
-            (activity as MainActivity).showSnackBar(getString(R.string.msg_check_gps), false)
+            mainActivity.showSnackBar(getString(R.string.msg_check_gps), false)
         }
     }
 
-    companion object {
+    companion object
+    {
         @JvmStatic
         fun newInstance() = QiblaFragment()
     }
 
-    override fun updateQibla() {
-        mapFragment?.getMapAsync(callback)
-        setupCompass()
+    override fun updateQibla()
+    {
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(500)
+            mapFragment?.getMapAsync(callback)
+            setupCompass()
+        }
     }
 }

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Al-Quran Karim</string>
-    <string name="last_read">"  Last Read"</string>
+    <string name="last_read">"Last Read"</string>
     <string name="asmaalhusna">Asma-ul-Husna</string>
     <string name="names_of_allah">99 Names of Allah</string>
     <string name="faqs">FAQs</string>
@@ -13,21 +13,25 @@
     <string name="maghrib">Maghrib</string>
     <string name="isha">Isha</string>
     <string name="kaaba_coordinates">Kaaba Coordinates</string>
-    <string name="zakat_payable">Zakat Payable is</string>
+    <string name="zakat_payable">Zakat Payable</string>
     <string name="choose_currency">Choose Currency</string>
     <string name="choose_nisab">Choose Nisab Measure</string>
     <string name="enter_nisab">Enter Nisab Value</string>
     <string name="enter_assets">Enter Assets Value</string>
     <string name="quran">Quran</string>
+    <string name="hadith">Hadith</string>
+    <string name="books_chapters">Hadith - Books &amp; Chapters</string>
     <string name="prayer_times">Prayer Times</string>
     <string name="qibla">Qibla</string>
     <string name="mosque">Mosque</string>
     <string name="zakat">Zakat</string>
+    <string name="tasbeeh">Tasbeeh</string>
     <string name="live_mecca">Live Mecca</string>
     <string name="live_medina">Live Medina</string>
     <string name="review">Review</string>
     <string name="remove_ads" translatable="false">AD</string>
     <string name="loading">Loading</string>
+    <string name="loading_ad">Loading Ad</string>
     <string name="please_wait">Please wait</string>
     <string name="playing">Playing</string>
     <string name="msg_permission_require">Location permission required for this feature</string>
@@ -43,13 +47,22 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="share">Share</string>
-    <string name="premium" translatable="false">Go Premium!</string>
+    <string name="premium">Go Premium</string>
+    <string name="support">Support Us!</string>
+    <string name="charges">now for <font color="#AFBF77" size="18"><b>$1/m</b> </font></string>
+    <string name="charges_fake"><b>$4/m</b></string>
+    <string name="rewards"><u>Rewards</u></string>
+    <string name="reward_points"><font color="#AFBF77">\u2713</font> Sadqa-e-Jaria \u0020\u0020<font color="#AFBF77">\u2713</font> No Ads</string>
+    <string name="upgrade">Tired of Ads. Upgrade to premium and enjoy ad-free smooth experience.</string>
+    <string name="donate">Help us in Da\'wah. Donate as little as <font color="#AFBF77" size="18"><b>$1/m</b></font> by subscribing.</string>
+    <string name="no_ads">No Ads !</string>
+    <string name="zakat_calculated">Your calculated Zakat is</string>
     <string name="in">in</string>
-    <string name="share_data">Get Quran, Prayer Times, Qibla Compass, and more, all in one app.\n\n
+    <string name="share_data">Get Quran, Hadiths, Prayer Times, Qibla Compass, and more, all in one app.\n\n
     Download for free!\n
         https://play.google.com/store/apps/details?id=com.myisolutions.quran
     </string>
-    <string name="store_url" translatable="false">https://play.google.com/store/apps/details?id=com.myisolutions.quran</string>
+    <string name="store_url">https://play.google.com/store/apps/details?id=com.myisolutions.quran</string>
     <string-array name="nisab_keys">
         <item>Gold</item>
         <item>Silver</item>
@@ -104,4 +117,6 @@
         <item>TRY</item>
         <item>USD</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

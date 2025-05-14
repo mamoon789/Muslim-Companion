@@ -3,12 +3,17 @@ package com.iqra.alquran.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iqra.alquran.R
 import com.iqra.alquran.network.models.*
 import com.iqra.alquran.network.wrapper.Resource
 import com.iqra.alquran.repository.Repository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import retrofit2.http.Query
 
-class MainViewModel() : ViewModel() {
+class MainViewModel() : ViewModel()
+{
 
     val repository = Repository()
     val namazTimings: MutableLiveData<Resource<NamazTimings>> = MutableLiveData()
@@ -16,33 +21,67 @@ class MainViewModel() : ViewModel() {
     val nearByPlaces: MutableLiveData<Resource<NearByPlaces>> = MutableLiveData()
     val hijriTime: MutableLiveData<Resource<HijriTime>> = MutableLiveData()
     val asmaAlHusna: MutableLiveData<Resource<AsmaAlHusna>> = MutableLiveData()
+    val books: MutableLiveData<Resource<Book>> = MutableLiveData()
+    val chapters: MutableLiveData<Resource<Chapter>> = MutableLiveData()
+    val hadiths: MutableLiveData<Resource<Hadith>> = MutableLiveData()
+    val statusPair: MutableLiveData<Pair<Int, String>> = MutableLiveData(Pair(R.id.rbStatusAll, ""))
+    val bookPair: MutableLiveData<Pair<Int, String>> = MutableLiveData(Pair(R.id.rbBooksAll, ""))
 
     fun getNamazTimings(timestamp: String, latitude: String, longitude: String) =
-        viewModelScope.async {
+        viewModelScope.launch {
             namazTimings.postValue(Resource.Loading())
             namazTimings.postValue(repository.getNamazTimings(timestamp, latitude, longitude))
         }
 
-    fun getForexRates(currency: String) = viewModelScope.async {
+    fun getForexRates(currency: String) = viewModelScope.launch(){
         forexRates.postValue(Resource.Loading())
         forexRates.postValue(repository.getForexRates(currency))
     }
 
     fun getNearByPlaces(location: String, radius: String, type: String, key: String) =
-        viewModelScope.async {
+        viewModelScope.launch {
             nearByPlaces.postValue(Resource.Loading())
             nearByPlaces.postValue(repository.getNearByPlaces(location, radius, type, key))
         }
 
-    fun getHijriTime(date: String)=
-        viewModelScope.async {
+    fun getHijriTime(date: String) =
+        viewModelScope.launch {
             hijriTime.postValue(Resource.Loading())
             hijriTime.postValue(repository.getHijriTime(date))
         }
 
-    fun getAsmaAlHusna()=
-        viewModelScope.async {
+    fun getAsmaAlHusna() =
+        viewModelScope.launch {
             asmaAlHusna.postValue(Resource.Loading())
             asmaAlHusna.postValue(repository.getAsmaAlHusna())
         }
+
+    fun getBooks() =
+        viewModelScope.launch {
+            books.postValue(Resource.Loading())
+            books.postValue(repository.getBooks())
+        }
+
+    fun getChapters(bookSlug: String) =
+        viewModelScope.launch {
+            chapters.postValue(Resource.Loading())
+            chapters.postValue(repository.getChapters(bookSlug))
+        }
+
+    fun getHadiths(
+        hadithEnglish: String = "",
+        book: String = "",
+        chapter: String = "",
+        status: String = ""
+    ) =
+        viewModelScope.launch {
+            hadiths.postValue(Resource.Loading())
+            hadiths.postValue(repository.getHadiths(hadithEnglish, book, chapter, status))
+        }
+
+    fun updateHadithSearchFilter(statusPair: Pair<Int, String>, bookPair: Pair<Int, String>)
+    {
+        this.statusPair.postValue(statusPair)
+        this.bookPair.postValue(bookPair)
+    }
 }

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="16dp"
+    tools:context=".views.HadithFilterFragment">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btReset"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="60dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="16dp"
+        android:padding="0dp"
+        android:text="Reset"
+        android:textAllCaps="false"
+        android:textColor="@color/red"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tvStatus"
+        app:layout_constraintEnd_toStartOf="@+id/tvFilter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:strokeColor="@color/red"
+        app:strokeWidth="1dp" />
+
+    <TextView
+        android:id="@+id/tvFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btReset"
+        app:layout_constraintEnd_toStartOf="@+id/btDone"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btReset"
+        app:layout_constraintTop_toTopOf="@+id/btReset"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btDone"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="60dp"
+        android:layout_height="38dp"
+        android:padding="0dp"
+        android:text="Done"
+        android:textAllCaps="false"
+        android:textColor="@color/purple"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tvFilter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvFilter"
+        app:layout_constraintTop_toTopOf="@+id/tvFilter"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:strokeColor="@color/purple"
+        app:strokeWidth="1dp" />
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/rgStatus"
+        app:layout_constraintEnd_toEndOf="@+id/btDone"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/btReset"
+        app:layout_constraintTop_toBottomOf="@+id/btReset" />
+
+    <RadioGroup
+        android:id="@+id/rgStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:paddingStart="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvBooks"
+        app:layout_constraintEnd_toEndOf="@+id/tvStatus"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/tvStatus"
+        app:layout_constraintTop_toBottomOf="@+id/tvStatus">
+
+        <RadioButton
+            android:id="@+id/rbStatusAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@drawable/radiobutton_drawable"
+            android:padding="5dp"
+            android:text="All"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:id="@+id/rbStatusSahih"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:button="@drawable/radiobutton_drawable"
+            android:padding="5dp"
+            android:text="Sahih"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:id="@+id/rbStatusHasan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:button="@drawable/radiobutton_drawable"
+            android:padding="5dp"
+            android:text="Hasan"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:id="@+id/rbStatusDaeef"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:button="@drawable/radiobutton_drawable"
+            android:padding="5dp"
+            android:text="Da'eef"
+            android:textColor="@color/black" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvBooks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Books"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/rgBooks"
+        app:layout_constraintEnd_toEndOf="@+id/rgStatus"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/rgStatus"
+        app:layout_constraintTop_toBottomOf="@+id/rgStatus" />
+
+    <RadioGroup
+        android:id="@+id/rgBooks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:paddingStart="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvBooks"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/tvBooks"
+        app:layout_constraintTop_toBottomOf="@+id/tvBooks">
+
+        <RadioButton
+            android:id="@+id/rbBooksAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@drawable/radiobutton_drawable"
+            android:padding="5dp"
+            android:text="All"
+            android:textColor="@color/black" />
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

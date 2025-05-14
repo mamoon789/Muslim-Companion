@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="20dp">
+
+    <ImageView
+        android:id="@+id/crown2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/crown"
+        android:scaleY="1.25"
+        app:layout_constraintBottom_toTopOf="@+id/goPremium2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/goPremium2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/premium"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/goPremiumMsg2"
+        app:layout_constraintEnd_toEndOf="@+id/crown2"
+        app:layout_constraintStart_toStartOf="@+id/crown2"
+        app:layout_constraintTop_toBottomOf="@+id/crown2" />
+
+    <TextView
+        android:id="@+id/goPremiumMsg2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/upgrade"
+        android:textAlignment="center"
+        android:textColor="@color/grey_text"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/charges"
+        app:layout_constraintEnd_toEndOf="@+id/goPremium2"
+        app:layout_constraintStart_toStartOf="@+id/goPremium2"
+        app:layout_constraintTop_toBottomOf="@+id/goPremium2" />
+
+    <TextView
+        android:id="@+id/charges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:background="@color/purple_bg"
+        android:paddingVertical="7dp"
+        android:paddingStart="15dp"
+        android:text="@string/charges"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/grey_text"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/subscribe"
+        app:layout_constraintEnd_toStartOf="@+id/chargesFake"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@+id/goPremiumMsg2"
+        app:layout_constraintTop_toBottomOf="@+id/goPremiumMsg2" />
+
+    <TextView
+        android:id="@+id/chargesFake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_bg"
+        android:paddingVertical="7dp"
+        android:paddingEnd="15dp"
+        android:text="@string/charges_fake"
+        android:textColor="@color/red"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/charges"
+        app:layout_constraintEnd_toEndOf="@+id/goPremiumMsg2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/charges" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/holo_red_light"
+        app:layout_constraintBottom_toBottomOf="@id/chargesFake"
+        app:layout_constraintEnd_toEndOf="@id/chargesFake"
+        app:layout_constraintStart_toStartOf="@id/chargesFake"
+        app:layout_constraintTop_toTopOf="@id/chargesFake" />
+
+    <Button
+        android:id="@+id/subscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/button"
+        android:paddingHorizontal="50dp"
+        android:text="Subscribe"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/chargesFake"
+        app:layout_constraintStart_toStartOf="@+id/charges"
+        app:layout_constraintTop_toBottomOf="@+id/charges" />
+
+    <Button
+        android:id="@+id/close"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

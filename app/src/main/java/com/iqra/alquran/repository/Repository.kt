@@ -1,12 +1,14 @@
 package com.iqra.alquran.repository
 
 import com.iqra.alquran.network.api.ForexRatesApi
+import com.iqra.alquran.network.api.HadithApi
 import com.iqra.alquran.network.api.NamazTimingsApi
 import com.iqra.alquran.network.api.NearByPlacesApi
 import com.iqra.alquran.network.models.*
 import com.iqra.alquran.network.wrapper.Resource
 
-class Repository : BaseRepository() {
+class Repository : BaseRepository()
+{
 
     suspend fun getNamazTimings(
         timestamp: String,
@@ -30,5 +32,20 @@ class Repository : BaseRepository() {
         date: String
     ): Resource<HijriTime> = safeApiCall { NamazTimingsApi().getHijriTime(date) }
 
-    suspend fun getAsmaAlHusna(): Resource<AsmaAlHusna> = safeApiCall { NamazTimingsApi().getAsmaAlHusna() }
+    suspend fun getAsmaAlHusna(): Resource<AsmaAlHusna> =
+        safeApiCall { NamazTimingsApi().getAsmaAlHusna() }
+
+    suspend fun getBooks(): Resource<Book> = safeApiCall { HadithApi().getBooks() }
+
+    suspend fun getChapters(bookSlug: String): Resource<Chapter> =
+        safeApiCall { HadithApi().getChapters(bookSlug) }
+
+    suspend fun getHadiths(
+        hadithEnglish: String,
+        book: String,
+        chapter: String,
+        status: String
+    ): Resource<Hadith> =
+        safeApiCall { HadithApi().getHadiths(hadithEnglish, book, chapter, status) }
+
 }

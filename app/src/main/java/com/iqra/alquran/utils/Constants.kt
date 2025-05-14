@@ -1,18 +1,13 @@
 package com.iqra.alquran.utils
 
-import android.content.res.Resources
-
 object Constants {
-    //region keys for maps, youtube, inapp & ads
-    const val API_KEY = "AIzaSyAe8ulK5nG2H1-KDWp8g7qct06Oq7jY8m8"
-    const val VIDEO_ID_MECCA = "HurieDZm_fs"
-    const val VIDEO_ID_MEDINA = "gUC3TjCrwRw"
-    const val LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjTZp7dH4dSBrykOX4XWl8zSxTq9eTR5jdUGzGvtQL4d6NieXqvo3rsFqa7ZPZbFo8EFaBbGjQlD+meWQnLdXO6ZJlMwpiZ0sctRZ0/Z5jgSbEDN7YKbkNWbPhBcyqFwHmyiP+SRSR4vAy4Fc/9KqHH78b6ddJ5wVGnjF5sakhU0+Sr6MqER3M15Dtjv/sSgzdGRiJ1zcj0JG8mrljhqayt4rC6HhZM7cJUOkA/AiG4VMNVXZRei7TTMbKvBmdMErwy+KuWvOBUv/K1ybiTFGO38fP+vY/OGfX27r6YNZbFT8WkCEHGrC6DAU2Xia9HAAQ4CN4cH5IF2G6cmCY528mQIDAQAB\n"
-    const val PRODUCT_ID = "sub101"
-    const val INTERSTITIAL_AD_ID = "ca-app-pub-3940256099942544/1033173712"     // Test Ad Id
-//    const val INTERSTITIAL_AD_ID = "ca-app-pub-1035415808955400/6606621748"     // Live Ad Id
-    const val APPOPEN_AD_ID = "ca-app-pub-3940256099942544/3419835294"     // Test Ad Id
-//    const val APPOPEN_AD_ID = "ca-app-pub-1035415808955400/8170562075"     // Live Ad Id
+    //region keys for youtube & test ads
+    const val VIDEO_ID_MECCA = "wkmIFbf_R_s"
+    const val VIDEO_ID_MEDINA = "NfEglaLYDwc"
+    const val APPOPEN_AD_ID = "ca-app-pub-3940256099942544/3419835294"
+    const val INTERSTITIAL_AD_ID = "ca-app-pub-3940256099942544/1033173712"
+    const val NATIVE_AD_ID = "ca-app-pub-3940256099942544/2247696110"
+    const val BANNER_AD_ID = "ca-app-pub-3940256099942544/9214589741"
     //endregion
 
     //region global variable for ads
@@ -35,17 +30,21 @@ object Constants {
     //endregion
 
     //region keys for intent & preferences
+    const val KEY_SHOWCASE = "SHOWCASE"
     const val KEY_SCRIPT = "SCRIPT"
     const val KEY_SCRIPT_FONT = "SCRIPT_FONT"
     const val KEY_TRANSLATION = "TRANSLATION"
     const val KEY_TRANSLATION_FONT = "TRANSLATION_FONT"
     const val KEY_ZOOM = "ZOOM"
-    const val KEY_BOOKMARKS = "BOOKMARKS"
+    const val KEY_QURAN_BOOKMARKS = "QURAN_BOOKMARKS"
     const val KEY_NAMAZ_ALARMS = "NAMAZ_ALARMS"
     const val KEY_LAST_READ = "LAST_READ"
     const val KEY_LAT = "LAT"
     const val KEY_LONG = "LONG"
     const val KEY_IS_SUBSCRIBED = "IS_SUBSCRIBED"
+    const val KEY_SHOW_PREMIUM_DIALOG = "SHOW_PREMIUM_DIALOG"
+    const val KEY_HADITH_BOOKMARKS = "HADITH_BOOKMARKS"
+    const val KEY_TASBEEH_DHIKRS = "KEY_TASBEEH_DHIKRS"
     //endregion
 
     //region global variables for quran

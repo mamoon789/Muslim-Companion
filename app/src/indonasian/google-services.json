@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "965531149815",
+    "project_id": "al-quran-karim-a299c",
+    "storage_bucket": "al-quran-karim-a299c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965531149815:android:2f4f2f9b754c62e3fb7af2",
+        "android_client_info": {
+          "package_name": "com.myisolutions.quran"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFpT6kOuMrWVDK9Q2t1OIVddPvuMD05Yc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965531149815:android:e2bdc76b6d4c6371fb7af2",
+        "android_client_info": {
+          "package_name": "com.myisolutions.quran.indonasian"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFpT6kOuMrWVDK9Q2t1OIVddPvuMD05Yc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,33 +10,42 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.iqra.alquran.utils.Constants
 
-open class BaseFragment : Fragment() {
+open class BaseFragment : Fragment()
+{
     var lat = 0.00
     var long = 0.00
 
-    override fun onStart() {
-        super.onStart()
-            getLocation()
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+        getLocation()
     }
 
-    private fun getLocation() {
-        val sharedPreferences = activity!!.getSharedPreferences("Settings", Context.MODE_PRIVATE)
+    private fun getLocation()
+    {
+        val mainActivity = activity as MainActivity
+        val sharedPreferences = mainActivity.getSharedPreferences("Settings", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         var locationGps: Location? = null
         var locationNetwork: Location? = null
-        val locationManager = activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager =
+            mainActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         val hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        if (hasGps || hasNetwork) {
-            if (hasGps) {
-                if ((activity as MainActivity).checkPermission()) {
+        if (hasGps || hasNetwork)
+        {
+            if (hasGps)
+            {
+                if (mainActivity.checkPermission())
+                {
                     locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 5000, 0F
                     ) { location -> locationGps = location }
                 }
 
                 val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                if (location != null) {
+                if (location != null)
+                {
                     locationGps = location
                     lat = locationGps!!.latitude
                     long = locationGps!!.longitude
@@ -45,15 +54,18 @@ open class BaseFragment : Fragment() {
                     editor.apply()
                 }
             }
-            if (hasNetwork) {
-                if ((activity as MainActivity).checkPermission()) {
+            if (hasNetwork)
+            {
+                if (mainActivity.checkPermission())
+                {
                     locationManager.requestLocationUpdates(
                         LocationManager.NETWORK_PROVIDER, 5000, 0F
                     ) { location -> locationNetwork = location }
                 }
                 val location =
                     locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                if (location != null) {
+                if (location != null)
+                {
                     locationNetwork = location
                     lat = locationNetwork!!.latitude
                     long = locationNetwork!!.longitude
@@ -63,11 +75,14 @@ open class BaseFragment : Fragment() {
                 }
             }
 
-            if (locationGps != null && locationNetwork != null) {
-                if (locationGps!!.accuracy > locationNetwork!!.accuracy) {
+            if (locationGps != null && locationNetwork != null)
+            {
+                if (locationGps!!.accuracy > locationNetwork!!.accuracy)
+                {
                     lat = locationGps!!.latitude
                     long = locationGps!!.longitude
-                } else {
+                } else
+                {
                     lat = locationNetwork!!.latitude
                     long = locationNetwork!!.longitude
                 }
@@ -77,26 +92,32 @@ open class BaseFragment : Fragment() {
             }
         }
 
-        if (this is MapsFragment) {
+        if (this is MapsFragment)
+        {
             updateMap()
         }
-        if (this is QiblaFragment) {
+        if (this is QiblaFragment)
+        {
             updateQibla()
         }
-        if (this is NamazFragment) {
+        if (this is NamazFragment)
+        {
             getNamazTimings()
         }
     }
 
-    interface Map {
+    interface Map
+    {
         fun updateMap()
     }
 
-    interface Qibla {
+    interface Qibla
+    {
         fun updateQibla()
     }
 
-    interface Namaz {
+    interface Namaz
+    {
         fun getNamazTimings()
     }
 }

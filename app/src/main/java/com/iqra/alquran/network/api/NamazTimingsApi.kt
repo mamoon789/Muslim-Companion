@@ -12,7 +12,8 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface NamazTimingsApi {
+interface NamazTimingsApi
+{
     @GET("timings/{timestamp}")
     suspend fun getNamazTimings(
         @Path("timestamp") timestamp: String,
@@ -21,16 +22,16 @@ interface NamazTimingsApi {
     ): Response<NamazTimings>
 
     @GET("gToH")
-    suspend fun getHijriTime(
-        @Query("date") date: String,
-        ): Response<HijriTime>
+    suspend fun getHijriTime(@Query("date") date: String): Response<HijriTime>
 
     @GET("asmaAlHusna")
     suspend fun getAsmaAlHusna(): Response<AsmaAlHusna>
 
-    companion object {
-        val BASE_URL = "http://api.aladhan.com/v1/"
-        operator fun invoke(): NamazTimingsApi {
+    companion object
+    {
+        private const val BASE_URL = "http://api.aladhan.com/v1/"
+        operator fun invoke(): NamazTimingsApi
+        {
             val api: NamazTimingsApi by lazy {
                 Retrofit.Builder()
                     .client(OkHttpClient.Builder().build())

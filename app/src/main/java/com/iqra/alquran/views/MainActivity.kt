@@ -7,14 +7,15 @@ import android.content.DialogInterface.OnClickListener
 import android.content.Intent
 import android.content.IntentSender.SendIntentException
 import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.*
+import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
@@ -27,7 +28,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.work.*
 import com.android.billingclient.api.*
-import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
@@ -35,29 +35,29 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.ActivityResult
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.android.youtube.player.YouTubeInitializationResult
-import com.google.android.youtube.player.YouTubePlayer
-import com.google.android.youtube.player.YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION
-import com.google.android.youtube.player.YouTubePlayerSupportFragmentX
-import com.google.gson.Gson
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+import com.iqra.alquran.BuildConfig
 import com.iqra.alquran.R
 import com.iqra.alquran.network.models.Quran
 import com.iqra.alquran.utils.Billing
 import com.iqra.alquran.utils.Constants
 import com.iqra.alquran.utils.Utility
 import com.iqra.alquran.worker.AlarmWorker
+import com.yarolegovich.slidingrootnav.R.string.srn_drawer_close
+import com.yarolegovich.slidingrootnav.R.string.srn_drawer_open
 import com.yarolegovich.slidingrootnav.SlideGravity
 import com.yarolegovich.slidingrootnav.SlidingRootNav
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
 import com.yarolegovich.slidingrootnav.util.ActionBarToggleAdapter
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.util.*
 import kotlin.system.exitProcess
 
@@ -66,21 +66,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
 {
     lateinit var sharedPreferences: SharedPreferences
 
-    private lateinit var toolbar: Toolbar
+    lateinit var toolbar: Toolbar
     lateinit var slidingRootNav: SlidingRootNav
     lateinit var quran: TextView
+    private lateinit var hadith: TextView
     private lateinit var prayer: TextView
-    private lateinit var setting: TextView
-    private lateinit var mosque: TextView
     private lateinit var zakat: TextView
+    private lateinit var tasbeeh: TextView
     private lateinit var qibla: TextView
     private lateinit var mecca: TextView
     private lateinit var medina: TextView
     private lateinit var asmaAlHusna: TextView
-    private lateinit var removeAds: TextView
+    private lateinit var goPremium: TextView
+    private lateinit var goPremiumMsg: TextView
     private lateinit var share: TextView
     private lateinit var review: TextView
-    private lateinit var lastView: View
 
     lateinit var surahs: MutableList<Quran.Data.Surah>
 
@@ -91,7 +91,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
     private var progressDialog: AlertDialog? = null
     private var interstitialAd: InterstitialAd? = null
 
-    lateinit var billing: Billing
+    private lateinit var billing: Billing
+
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?)
@@ -124,36 +126,38 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                 this@MainActivity,
                 this,
                 toolbar,
-                R.string.srn_drawer_open,
-                R.string.srn_drawer_close
+                srn_drawer_open,
+                srn_drawer_close
             ).run {
                 syncState()
                 isDrawerIndicatorEnabled = false
                 setToolbarNavigationClickListener {
-                    onBackPressed()
+                    drawerListener()
                 }
             }
         }
 
         quran = findViewById(R.id.quran)
+        hadith = findViewById(R.id.hadith)
         prayer = findViewById(R.id.prayer)
-        setting = findViewById(R.id.settings)
-        mosque = findViewById(R.id.mosque)
         zakat = findViewById(R.id.zakat)
+        tasbeeh = findViewById(R.id.tasbeeh)
         qibla = findViewById(R.id.qibla)
         mecca = findViewById(R.id.mecca)
         medina = findViewById(R.id.medina)
         asmaAlHusna = findViewById(R.id.asmaAlHusna)
-        removeAds = findViewById(R.id.removeAds)
+        goPremium = findViewById(R.id.goPremium)
+        goPremiumMsg = findViewById(R.id.goPremiumMsg)
         share = findViewById(R.id.share)
         review = findViewById(R.id.review)
 
-        removeAds.setOnClickListener(this)
+        goPremium.setOnClickListener(this)
+        goPremiumMsg.setOnClickListener(this)
         quran.setOnClickListener(this)
+        hadith.setOnClickListener(this)
         prayer.setOnClickListener(this)
-        setting.setOnClickListener(this)
-        mosque.setOnClickListener(this)
         zakat.setOnClickListener(this)
+        tasbeeh.setOnClickListener(this)
         qibla.setOnClickListener(this)
         mecca.setOnClickListener(this)
         medina.setOnClickListener(this)
@@ -175,35 +179,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
             Context.MODE_PRIVATE
         )
 
+        firebaseAnalytics = Firebase.analytics
+
         billing = Billing(this)
 
         surahs = Utility.getQuran(this).data.surahs
 
+//        Utility.makeHtmlBodyWithTranslation(this)
+
         AlarmWorker.updateAlarms(this, false)
 
-//        if (savedInstanceState == null)
-//        {
-        showFragment(SplashFragment.newInstance())
-//        } else
-//        {
-//            val meccaFragment = supportFragmentManager.findFragmentByTag(Constants.VIDEO_ID_MECCA)
-//            val medinaFragment = supportFragmentManager.findFragmentByTag(Constants.VIDEO_ID_MEDINA)
-//            if (meccaFragment != null)
-//            {
-//                showYoutubeFragment(
-//                    meccaFragment as YouTubePlayerSupportFragmentX,
-//                    Constants.VIDEO_ID_MECCA,
-//                    false
-//                )
-//            } else if (medinaFragment != null)
-//            {
-//                showYoutubeFragment(
-//                    medinaFragment as YouTubePlayerSupportFragmentX,
-//                    Constants.VIDEO_ID_MEDINA,
-//                    false
-//                )
-//            }
-//        }
+        showFragment(SplashFragment.newInstance(), "splash")
     }
 
     override fun onResume()
@@ -213,7 +199,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         billing.checkSubPurchase()
     }
 
-    fun installInAppUpdate()
+    private fun installInAppUpdate()
     {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo: AppUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE ||
@@ -224,9 +210,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                 {
                     appUpdateManager.startUpdateFlowForResult(
                         appUpdateInfo,
-                        AppUpdateType.IMMEDIATE,
                         this,
-                        100
+                        AppUpdateOptions.defaultOptions(AppUpdateType.IMMEDIATE),
+                        100,
                     )
                 } catch (e: SendIntentException)
                 {
@@ -254,6 +240,23 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         }
     }
 
+    private fun drawerListener()
+    {
+        if (slidingRootNav.isMenuClosed)
+        {
+            if (reviewInfo != null)
+            {
+                reviewManager.launchReviewFlow(this, reviewInfo!!)
+                    .addOnCompleteListener {
+                        slidingRootNav.openMenu(true)
+                    }
+            } else
+            {
+                slidingRootNav.openMenu(true)
+            }
+        }
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed()
     {
@@ -263,124 +266,42 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         }
         if (supportFragmentManager.backStackEntryCount == 0)
         {
-            if (slidingRootNav.isMenuClosed)
-            {
-                if (reviewInfo != null)
-                {
-                    reviewManager.launchReviewFlow(this, reviewInfo!!)
-                        .addOnCompleteListener {
-                            slidingRootNav.openMenu(true)
-                        }
-                } else
-                {
-                    slidingRootNav.openMenu(true)
-                }
-            } else
-            {
+            supportFragmentManager.findFragmentByTag("splash")?.apply {
+                if (isVisible) return
+            } ?: run {
                 showCustomDialog()
             }
         } else
         {
-            super.onBackPressed()
+            supportFragmentManager.findFragmentByTag("loading")?.apply {
+                if (isVisible) return
+            } ?: run {
+                super.onBackPressed()
+            }
         }
     }
 
-    private fun getQuran(): Quran
+    override fun onClick(v: View)
     {
-        getQuranSettings()
-
-        val quranJson = StringBuilder()
-        val inputStream = assets.open(
-            Constants.CURRENT_SCRIPT + "_" + Constants.CURRENT_TRANSLATION + ".json"
-//            Constants.CURRENT_SCRIPT +".json"
-        )
-        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-        var line: String?
-        while (bufferedReader.readLine().also { line = it } != null)
-        {
-            quranJson.append(line)
-            quranJson.append('\n')
-        }
-        inputStream.close()
-        bufferedReader.close()
-        return Gson().fromJson(quranJson.toString(), Quran::class.java)
-    }
-
-    private fun getQuranSettings()
-    {
-        Constants.CURRENT_SCRIPT = sharedPreferences.getString(
-            Constants.KEY_SCRIPT,
-            Constants.SCRIPTS.keys.toList()[0]
-        )!!
-        Constants.CURRENT_SCRIPT_FONT = sharedPreferences.getString(
-            Constants.KEY_SCRIPT_FONT,
-            Constants.AR_FONTS.values.toList()[0]
-        )!!
-        Constants.CURRENT_TRANSLATION = sharedPreferences.getString(
-            Constants.KEY_TRANSLATION,
-            Constants.TRANSLATIONS.keys.toList()[0]
-        )!!
-        Constants.CURRENT_TRANSLATION_FONT = sharedPreferences.getString(
-            Constants.KEY_TRANSLATION_FONT,
-            Constants.EN_FONTS.values.toList()[0]
-        )!!
-        Constants.CURRENT_ZOOM = sharedPreferences.getInt(
-            Constants.KEY_ZOOM,
-            100
-        )
-    }
-
-    fun loadAd()
-    {
-        val adRequest = AdRequest.Builder().build()
-
-        InterstitialAd.load(
-            this,
-            Constants.INTERSTITIAL_AD_ID,
-            adRequest,
-            object : InterstitialAdLoadCallback()
-            {
-                override fun onAdFailedToLoad(adError: LoadAdError)
-                {
-                    interstitialAd = null
-                }
-
-                override fun onAdLoaded(interstitialAd: InterstitialAd)
-                {
-                    this@MainActivity.interstitialAd = interstitialAd
-
-                    this@MainActivity.interstitialAd?.fullScreenContentCallback =
-                        object : FullScreenContentCallback()
-                        {
-                            override fun onAdDismissedFullScreenContent()
-                            {
-                                // Called when ad is dismissed.
-                                Constants.INTERSTITIAL_AD_SHOWN = false
-                            }
-
-                            override fun onAdShowedFullScreenContent()
-                            {
-                                // Called when ad is shown.
-                                Constants.INTERSTITIAL_AD_SHOWN = true
-                            }
-                        }
-
-                    this@MainActivity.interstitialAd?.show(this@MainActivity)
-                }
-            })
-    }
-
-    override fun onClick(v: View?)
-    {
-        val isSubscribed = sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false)
-        lastView = v!!
         when (v.id)
         {
             R.id.quran ->
             {
-                toolbar.title = resources.getString(R.string.app_name)
+                firebaseAnalytics.logEvent("quran_frag", null)
+                updateToolbar(title = resources.getString(R.string.app_name))
+                updateSideMenu(tv = quran)
                 showFragment(QuranNavFragment.newInstance())
-                resetSideMenuColor()
+            }
+
+            R.id.hadith ->
+            {
+                if (checkInternetConnection())
+                {
+                    firebaseAnalytics.logEvent("hadith_frag", null)
+                    updateToolbar(title = resources.getString(R.string.hadith))
+                    updateSideMenu(tv = hadith)
+                    showFragment(HadithNavFragment.newInstance())
+                }
             }
 
             R.id.prayer ->
@@ -389,40 +310,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                 {
                     if (checkPermission())
                     {
-                        toolbar.title = resources.getString(R.string.prayer_times)
-                        if (!isSubscribed)
-                            loadAd()
+                        firebaseAnalytics.logEvent("prayer_frag", null)
+                        updateToolbar(title = resources.getString(R.string.prayer_times))
+                        updateSideMenu(tv = prayer)
                         showFragment(NamazFragment.newInstance())
-                        resetSideMenuColor()
                     } else
                     {
-                        requestPermission()
-                    }
-                }
-            }
-
-            R.id.settings ->
-            {
-                toolbar.title = resources.getString(R.string.settings)
-                if (sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false))
-                    if (!isSubscribed)
-                        loadAd()
-                showFragment(SettingsFragment.newInstance())
-                resetSideMenuColor()
-            }
-
-            R.id.mosque ->
-            {
-                if (checkInternetConnection())
-                {
-                    if (checkPermission())
-                    {
-                        toolbar.title = resources.getString(R.string.mosque)
-                        showFragment(MapsFragment.newInstance())
-                        resetSideMenuColor()
-                    } else
-                    {
-                        requestPermission()
+                        requestPermission(requestCode = R.id.prayer)
                     }
                 }
             }
@@ -431,11 +325,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
             {
                 if (checkInternetConnection())
                 {
-                    toolbar.title = resources.getString(R.string.zakat)
-                    if (!isSubscribed)
-                        loadAd()
+                    firebaseAnalytics.logEvent("zakat_frag", null)
+                    updateToolbar(title = resources.getString(R.string.zakat))
+                    updateSideMenu(tv = zakat)
                     showFragment(ZakatFragment.newInstance())
-                    resetSideMenuColor()
+                }
+            }
+
+            R.id.tasbeeh ->
+            {
+                if (checkInternetConnection())
+                {
+                    firebaseAnalytics.logEvent("tasbeeh_frag", null)
+                    updateToolbar(title = resources.getString(R.string.tasbeeh))
+                    updateSideMenu(tv = tasbeeh)
+                    showFragment(TasbeehNavFragment.newInstance())
                 }
             }
 
@@ -445,14 +349,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                 {
                     if (checkPermission())
                     {
-                        toolbar.title = resources.getString(R.string.qibla)
-                        if (!isSubscribed)
-                            loadAd()
+                        firebaseAnalytics.logEvent("qibla_frag", null)
+                        updateToolbar(title = resources.getString(R.string.qibla))
+                        updateSideMenu(tv = qibla)
                         showFragment(QiblaFragment.newInstance())
-                        resetSideMenuColor()
                     } else
                     {
-                        requestPermission()
+                        requestPermission(requestCode = R.id.qibla)
                     }
                 }
             }
@@ -461,9 +364,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
             {
                 if (checkInternetConnection())
                 {
-                    toolbar.title = resources.getString(R.string.live_mecca)
-                    showFragment(YoutubeFragment.newInstance(Constants.VIDEO_ID_MECCA))
-                    resetSideMenuColor()
+                    firebaseAnalytics.logEvent("mecca_frag", null)
+                    updateToolbar(title = resources.getString(R.string.live_mecca))
+                    updateSideMenu(tv = mecca)
+                    showFragment(YoutubeFragment.newInstance(Constants.VIDEO_ID_MECCA), "mecca")
                 }
             }
 
@@ -471,9 +375,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
             {
                 if (checkInternetConnection())
                 {
-                    toolbar.title = resources.getString(R.string.live_medina)
-                    showFragment(YoutubeFragment.newInstance(Constants.VIDEO_ID_MEDINA))
-                    resetSideMenuColor()
+                    firebaseAnalytics.logEvent("medina_frag", null)
+                    updateToolbar(title = resources.getString(R.string.live_medina))
+                    updateSideMenu(tv = medina)
+                    showFragment(YoutubeFragment.newInstance(Constants.VIDEO_ID_MEDINA), "medina")
                 }
             }
 
@@ -481,19 +386,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
             {
                 if (checkInternetConnection())
                 {
-                    toolbar.title = resources.getString(R.string.asmaalhusna)
-                    if (!isSubscribed)
-                        loadAd()
+                    firebaseAnalytics.logEvent("names_frag", null)
+                    updateToolbar(title = resources.getString(R.string.asmaalhusna))
+                    updateSideMenu(tv = asmaAlHusna)
                     showFragment(AsmaAlHusnaFragment.newInstance())
-                    resetSideMenuColor()
                 }
             }
 
             R.id.share ->
             {
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_data))
+                firebaseAnalytics.logEvent("share_app", null)
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, getString(R.string.share_data))
+                }
                 startActivity(
                     Intent.createChooser(
                         intent,
@@ -506,75 +412,227 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
             {
                 if (checkInternetConnection())
                 {
-                    val openURL = Intent(Intent.ACTION_VIEW)
-                    openURL.data =
-                        Uri.parse(getString(R.string.store_url))
-                    startActivity(openURL)
+                    firebaseAnalytics.logEvent("review_app", null)
+                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                        data = Uri.parse(getString(R.string.store_url))
+                    }
+                    startActivity(intent)
                 }
             }
 
-            R.id.removeAds ->
+            R.id.goPremium, R.id.goPremiumMsg ->
             {
-                if (checkInternetConnection())
-                {
-                    try
-                    {
-                        billing.launchPurchaseFlow()
-                    } catch (e: Exception)
-                    {
-                        Log.e("billing", "onClick: " + e.message)
-                    }
-                }
+                firebaseAnalytics.logEvent("buy_subscription_drawer", null)
+                buySubscription()
             }
         }
         slidingRootNav.closeMenu()
     }
 
-    private fun resetSideMenuColor()
+    private fun buySubscription(callback: (() -> Unit)? = null)
     {
-        quran.setTextColor(getColor(R.color.grey))
-        prayer.setTextColor(getColor(R.color.grey))
-        setting.setTextColor(getColor(R.color.grey))
-        mosque.setTextColor(getColor(R.color.grey))
-        zakat.setTextColor(getColor(R.color.grey))
-        qibla.setTextColor(getColor(R.color.grey))
-        mecca.setTextColor(getColor(R.color.grey))
-        medina.setTextColor(getColor(R.color.grey))
-        asmaAlHusna.setTextColor(getColor(R.color.grey))
-        (lastView as TextView).setTextColor(getColor(R.color.purple))
+        try
+        {
+            billing.launchPurchaseFlow(callback)
+        } catch (e: Exception)
+        {
+            Log.e("billing", "onClick: " + e.message)
+            callback?.invoke()
+        }
+    }
+
+    private fun updateToolbar(title: String, subTitle: String = "")
+    {
+        toolbar.title = title
+        toolbar.subtitle = subTitle
+    }
+
+    private fun updateSideMenu(tv: TextView)
+    {
+        quran.setTextColor(getColor(R.color.black))
+        hadith.setTextColor(getColor(R.color.black))
+        prayer.setTextColor(getColor(R.color.black))
+        zakat.setTextColor(getColor(R.color.black))
+        tasbeeh.setTextColor(getColor(R.color.black))
+        qibla.setTextColor(getColor(R.color.black))
+        mecca.setTextColor(getColor(R.color.black))
+        medina.setTextColor(getColor(R.color.black))
+        asmaAlHusna.setTextColor(getColor(R.color.black))
+        tv.setTextColor(getColor(R.color.purple))
+
+        quran.setTypeface(null, Typeface.NORMAL);
+        hadith.setTypeface(null, Typeface.NORMAL);
+        prayer.setTypeface(null, Typeface.NORMAL);
+        zakat.setTypeface(null, Typeface.NORMAL);
+        tasbeeh.setTypeface(null, Typeface.NORMAL);
+        qibla.setTypeface(null, Typeface.NORMAL);
+        mecca.setTypeface(null, Typeface.NORMAL);
+        medina.setTypeface(null, Typeface.NORMAL);
+        asmaAlHusna.setTypeface(null, Typeface.NORMAL);
+        tv.setTypeface(null, Typeface.BOLD);
+    }
+
+    fun loadBanner(adContainer: FrameLayout)
+    {
+        val isSubscribed = sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false)
+        if (isSubscribed)
+        {
+            return
+        }
+
+        val adView = AdView(this)
+        adView.adUnitId = if (BuildConfig.DEBUG) Constants.BANNER_AD_ID else BuildConfig.BANNER_AD_ID
+        adView.setAdSize(Utility.getBannerAdSize(this))
+
+        adContainer.removeAllViews()
+        adContainer.addView(adView)
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+    }
+
+    private fun loadAd(callback: (() -> Unit)?)
+    {
+        val adRequest = AdRequest.Builder().build()
+
+        showCustomDialog(R.layout.dialog_progress_ad)
+
+        InterstitialAd.load(
+            this,
+            if (BuildConfig.DEBUG) Constants.INTERSTITIAL_AD_ID else BuildConfig.INTERSTITIAL_AD_ID,
+            adRequest,
+            object : InterstitialAdLoadCallback()
+            {
+                override fun onAdFailedToLoad(adError: LoadAdError)
+                {
+                    hideDialog()
+                    interstitialAd = null
+                    callback?.invoke()
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd)
+                {
+                    hideDialog()
+                    this@MainActivity.interstitialAd = interstitialAd
+
+                    this@MainActivity.interstitialAd?.fullScreenContentCallback =
+                        object : FullScreenContentCallback()
+                        {
+                            override fun onAdDismissedFullScreenContent()
+                            {
+                                Constants.INTERSTITIAL_AD_SHOWN = false
+                                callback?.invoke()
+                            }
+
+                            override fun onAdShowedFullScreenContent()
+                            {
+                                Constants.INTERSTITIAL_AD_SHOWN = true
+                            }
+                        }
+
+                    this@MainActivity.interstitialAd?.show(this@MainActivity)
+                }
+            })
+    }
+
+    fun showPremiumDialogOrAd(callback: (() -> Unit)? = null)
+    {
+        val isSubscribed = sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false)
+        if (isSubscribed)
+        {
+            callback?.invoke()
+            return
+        }
+
+        val showPremiumDialog = sharedPreferences.getInt(Constants.KEY_SHOW_PREMIUM_DIALOG, 1)
+        sharedPreferences.edit()
+            .putInt(Constants.KEY_SHOW_PREMIUM_DIALOG, showPremiumDialog + 1)
+            .apply()
+        if (showPremiumDialog % 6 == 0)
+        {
+            showCustomDialog(R.layout.dialog_premium2, callback)
+            return
+        }
+        if (showPremiumDialog % 3 == 0)
+        {
+            showCustomDialog(R.layout.dialog_premium, callback)
+            return
+        }
+
+        if (!checkInternetConnection(showAlert = false))
+        {
+            callback?.invoke()
+            return
+        }
+
+        loadAd(callback)
     }
 
     fun showCustomDialog(
-        layout: Int = -1,
+        layout: Int,
+        callback: (() -> Unit)?
+    )
+    {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(layout, null, false).apply {
+            findViewById<Button>(R.id.subscribe).setOnClickListener {
+                hideDialog()
+                buySubscription(callback)
+                firebaseAnalytics.logEvent("buy_subscription_dialog", null)
+            }
+            findViewById<Button>(R.id.close).setOnClickListener {
+                hideDialog()
+                if (!checkInternetConnection(showAlert = false))
+                {
+                    callback?.invoke()
+                    return@setOnClickListener
+                }
+                loadAd(callback)
+            }
+        }
+
+        progressDialog = AlertDialog.Builder(this).setView(view).create()
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.show()
+    }
+
+    fun showCustomDialog(
+        layout: Any = -1,
         title: String = getString(R.string.exit),
         message: String = getString(R.string.msg_exit),
         positiveTxt: String = getString(R.string.yes),
         negativeTxt: String = getString(R.string.no),
-        positiveListener: OnClickListener = OnClickListener { _, _ ->  exitProcess(0)},
-        negativeListener: OnClickListener = OnClickListener { _, _ ->  hideDialog()}
+        positiveListener: OnClickListener = OnClickListener { _, _ -> exitProcess(0) },
+        negativeListener: OnClickListener = OnClickListener { _, _ -> hideDialog() },
     )
     {
         if (progressDialog == null)
         {
-            when (layout)
+            when
             {
-                -1 ->
+                layout is Int && layout == -1 ->
                 {
-                    progressDialog = AlertDialog.Builder(this).apply {
-                        setTitle(title)
-                        setMessage(message)
-                        setPositiveButton(positiveTxt, positiveListener)
-                        setNegativeButton(negativeTxt, negativeListener)
-                    }.create()
+                    progressDialog = AlertDialog.Builder(this)
+                        .setTitle(title)
+                        .setMessage(message)
+                        .setPositiveButton(positiveTxt, positiveListener)
+                        .setNegativeButton(negativeTxt, negativeListener)
+                        .create()
                 }
-                else ->
+
+                layout is Int ->
+                {
+                    progressDialog = AlertDialog.Builder(this).setView(layout).create()
+                }
+
+                layout is View ->
                 {
                     progressDialog = AlertDialog.Builder(this).setView(layout).create()
                 }
             }
-            progressDialog!!.setCancelable(false)
-            progressDialog!!.show()
         }
+        progressDialog!!.setCancelable(false)
+        progressDialog!!.show()
     }
 
     fun hideDialog()
@@ -586,7 +644,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         }
     }
 
-    fun checkInternetConnection(): Boolean
+    fun checkInternetConnection(showAlert: Boolean = true): Boolean
     {
         val connectionManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -596,7 +654,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         {
             return true
         }
-        showSnackBar(getString(R.string.msg_connect_internet), true)
+        if (showAlert)
+        {
+            showSnackBar(getString(R.string.msg_connect_internet), true)
+        }
         return false
     }
 
@@ -613,14 +674,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         return coarsePermission == PackageManager.PERMISSION_GRANTED && finePermission == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun requestPermission()
+    private fun requestPermission(requestCode: Int)
     {
         requestPermissions(
             arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ),
-            0
+            requestCode
         )
     }
 
@@ -631,11 +692,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
     )
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 0 && grantResults.isNotEmpty())
+        if (grantResults.isNotEmpty())
         {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
-                onClick(lastView)
+                onClick(findViewById(requestCode))
             } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
             {
                 showSnackBar(getString(R.string.msg_permission_require), false)
@@ -674,72 +735,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         snackBar.show()
     }
 
-    private fun showFragment(fragment: Fragment)
+    private fun showFragment(fragment: Fragment, tag: String = "")
     {
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, fragment)
+        transaction.replace(R.id.container, fragment, tag)
         transaction.commitAllowingStateLoss()
-    }
-
-    private fun showYoutubeFragment(
-        fragment: YouTubePlayerSupportFragmentX,
-        vId: String,
-        newTransaction: Boolean
-    )
-    {
-        fragment.initialize(
-            Constants.API_KEY,
-            object : YouTubePlayer.OnInitializedListener
-            {
-                @SuppressLint("SourceLockedOrientationActivity")
-                override fun onInitializationSuccess(
-                    provider: YouTubePlayer.Provider?,
-                    player: YouTubePlayer,
-                    wasRestored: Boolean
-                )
-                {
-                    player.addFullscreenControlFlag(FULLSCREEN_FLAG_CONTROL_ORIENTATION)
-                    if (newTransaction)
-                    {
-                        player.setFullscreen(false)
-                    }
-                    if (!wasRestored)
-                    {
-                        player.loadVideo(vId)
-                    }
-                    player.play()
-
-                    player.setOnFullscreenListener { isFullSize ->
-                        requestedOrientation = if (isFullSize)
-                        {
-                            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-                        } else
-                        {
-                            ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-                        }
-                    }
-                }
-
-                override fun onInitializationFailure(
-                    arg0: YouTubePlayer.Provider?,
-                    arg1: YouTubeInitializationResult?
-                )
-                {
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(R.string.msg_try_later),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
-
-        if (newTransaction)
-        {
-            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.container, fragment, vId)
-            transaction.commitAllowingStateLoss()
-        }
     }
 }

@@ -1,33 +1,55 @@
 package com.iqra.alquran.views
 
+import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.iqra.alquran.R
+import com.iqra.alquran.application.MyApplication
 import com.iqra.alquran.utils.Constants
+import com.iqra.alquran.utils.Utility
 import com.iqra.alquran.viewmodels.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class ZakatFragment : Fragment() {
-
-    var currency = ""
-    var nisab = ""
+class ZakatFragment : Fragment()
+{
+    lateinit var mainActivity: MainActivity
+    lateinit var viewModel: MainViewModel
+    lateinit var adContainer: FrameLayout
+    lateinit var currency: String
+    lateinit var nisab: String
+    var currencyPosition = 0
+    var nisabPosition = 0
     var nisabValue = 0
+
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+        mainActivity = activity as MainActivity
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        nisab = resources.getStringArray(R.array.nisab_keys)[nisabPosition]
+        currency = resources.getStringArray(R.array.currencies_values)[currencyPosition]
+        viewModel.getForexRates(currency)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val mainActivity = activity as MainActivity
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
+    ): View?
+    {
         val view = inflater.inflate(R.layout.fragment_zakat, container, false)
         val spCurrency = view.findViewById<Spinner>(R.id.spCurrency)
         val spNisab = view.findViewById<Spinner>(R.id.spNisab)
@@ -35,6 +57,9 @@ class ZakatFragment : Fragment() {
         val etAsset = view.findViewById<EditText>(R.id.etAsset)
         val tvZakat = view.findViewById<TextView>(R.id.tvZakat)
         val tvFaqs = view.findViewById<TextView>(R.id.tvFaqs)
+        adContainer = view.findViewById(R.id.adContainer)
+
+        mainActivity.loadBanner(adContainer)
 
         tvFaqs.paintFlags = tvFaqs.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
@@ -45,24 +70,31 @@ class ZakatFragment : Fragment() {
         )
         currencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spCurrency.adapter = currencyAdapter
+        spCurrency.setSelection(currencyPosition, false)
 
-        spCurrency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spCurrency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener
+        {
+            @SuppressLint("SetTextI18n")
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long
-            ) {
-                if(mainActivity.checkInternetConnection()) {
-                    currency = resources.getStringArray(R.array.currencies_values)[position]
+            )
+            {
+                currencyPosition = position
+                if (mainActivity.checkInternetConnection())
+                {
+                    currency = resources.getStringArray(R.array.currencies_values)[currencyPosition]
                     viewModel.getForexRates(currency)
 
                     etAsset.setText("")
-                    tvZakat.setText("$currency 0")
+                    tvZakat.text = "$currency 0"
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
+            override fun onNothingSelected(parent: AdapterView<*>?)
+            {
             }
         }
 
@@ -73,80 +105,85 @@ class ZakatFragment : Fragment() {
         )
         nisabAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spNisab.adapter = nisabAdapter
+        spNisab.setSelection(nisabPosition, false)
 
-        spNisab.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spNisab.onItemSelectedListener = object : AdapterView.OnItemSelectedListener
+        {
+            @SuppressLint("SetTextI18n")
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long
-            ) {
-                if(mainActivity.checkInternetConnection()) {
-                    nisab = resources.getStringArray(R.array.nisab_keys)[position]
+            )
+            {
+                nisabPosition = position
+                if (mainActivity.checkInternetConnection())
+                {
+                    nisab = resources.getStringArray(R.array.nisab_keys)[nisabPosition]
                     viewModel.getForexRates(currency)
 
                     etAsset.setText("")
-                    tvZakat.setText("$currency 0")
+                    tvZakat.text = "$currency 0"
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
+            override fun onNothingSelected(parent: AdapterView<*>?)
+            {
             }
         }
 
         viewModel.forexRates.observe(viewLifecycleOwner) {
-            if(it.data != null) {
-                mainActivity.hideDialog()
-
-                if (it.data.items.isNotEmpty()) {
-                    Log.e("nisab", it.data.items[0].toString())
-
-                    if (nisab == resources.getStringArray(R.array.nisab_keys)[0]) {
+            mainActivity.hideDialog()
+            if (it.data != null)
+            {
+                if (it.data.items.isNotEmpty())
+                {
+                    nisabValue = if (nisab == resources.getStringArray(R.array.nisab_keys)[0])
+                    {
                         val xauValue = it.data.items[0].xauPrice.toDouble()
-                        nisabValue = (xauValue * 2.8125473).toInt()
+                        (xauValue / 31.1035 * 87.48).toInt()
 
-                    } else {
+                    } else
+                    {
                         val xagValue = it.data.items[0].xagPrice.toDouble()
-                        nisabValue = (xagValue * 19.6878312).toInt()
+                        (xagValue / 28.35 * 612.36).toInt()
                     }
                     etNisab.setText(nisabValue.toString())
                 }
-            }else if(it.message != null){
-                mainActivity.hideDialog()
-
-                val message = when (it.message) {
-                    Constants.MSG_TRY_LATER -> {
-                        getString(R.string.msg_try_later)
-                    }
-                    Constants.MSG_CONNECT_INTERNET -> {
-                        getString(R.string.msg_connect_internet)
-                    }
-                    else -> {
-                        it.message
-                    }
-                }
-
-                mainActivity.showSnackBar(message, message == Constants.MSG_CONNECT_INTERNET)
-            }else{
-                mainActivity.showCustomDialog(R.layout.progress_dialog)
+            } else if (it.message != null)
+            {
+                mainActivity.showSnackBar(it.message, it.message == Constants.MSG_CONNECT_INTERNET)
+            } else
+            {
+                mainActivity.showCustomDialog(R.layout.dialog_progress)
             }
         }
 
-        etAsset.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
+        etAsset.addTextChangedListener(object : TextWatcher
+        {
+            override fun afterTextChanged(s: Editable?)
+            {
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int)
+            {
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!etAsset.text.isNullOrEmpty()) {
+            @SuppressLint("SetTextI18n")
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
+            {
+                if (!etAsset.text.isNullOrEmpty())
+                {
                     val assetVal = etAsset.text.toString().toLongOrNull()
-                    if (assetVal == null) {
+                    if (assetVal == null)
+                    {
                         return
-                    } else if (assetVal >= nisabValue) {
+                    } else if (assetVal >= nisabValue)
+                    {
                         tvZakat.text = "$currency " + (assetVal * .025).toLong()
-                    } else {
+                    } else
+                    {
                         tvZakat.text = "$currency 0"
                     }
                 }
@@ -165,7 +202,8 @@ class ZakatFragment : Fragment() {
         return view
     }
 
-    companion object {
+    companion object
+    {
         @JvmStatic
         fun newInstance() = ZakatFragment()
     }

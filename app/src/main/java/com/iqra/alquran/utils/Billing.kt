@@ -1,19 +1,21 @@
 package com.iqra.alquran.utils
 
-import android.app.Activity
 import android.util.Log
-import android.widget.Toast
 import com.android.billingclient.api.*
+import com.iqra.alquran.BuildConfig
 import com.iqra.alquran.views.MainActivity
 
 class Billing(val activity: MainActivity)
 {
     private var billingClient: BillingClient
     var isBillingClientReady = false
+    var callback: (() -> Unit)? = null
 
     init
     {
-        billingClient = BillingClient.newBuilder(activity).enablePendingPurchases()
+        billingClient = BillingClient.newBuilder(activity).enablePendingPurchases(
+            PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()
+        )
             .setListener { billingResult, purchaseList ->
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchaseList != null)
                 {
@@ -50,12 +52,13 @@ class Billing(val activity: MainActivity)
         })
     }
 
-    fun launchPurchaseFlow()
+    fun launchPurchaseFlow(callback: (() -> Unit)?)
     {
+        this.callback = callback
         if (!isBillingClientReady) return
 
         val productList = listOf(
-            QueryProductDetailsParams.Product.newBuilder().setProductId(Constants.PRODUCT_ID)
+            QueryProductDetailsParams.Product.newBuilder().setProductId(BuildConfig.PRODUCT_ID)
                 .setProductType(BillingClient.ProductType.SUBS).build()
         )
         val params = QueryProductDetailsParams.newBuilder().setProductList(productList).build()
@@ -63,7 +66,7 @@ class Billing(val activity: MainActivity)
         billingClient.queryProductDetailsAsync(params) { _, productDetailsList ->
             for (productDetails in productDetailsList)
             {
-                if (productDetails.productId == Constants.PRODUCT_ID)
+                if (productDetails.productId == BuildConfig.PRODUCT_ID)
                 {
                     assert(productDetails.subscriptionOfferDetails != null)
                     val productDetailsParamsList = listOf(
@@ -84,6 +87,10 @@ class Billing(val activity: MainActivity)
 
     fun checkSubPurchase()
     {
+       callback = callback?.run {
+            invoke()
+            null
+        }
         if (!isBillingClientReady) return
 
         val param =
@@ -111,6 +118,11 @@ class Billing(val activity: MainActivity)
                         {
                             verifySubPurchase(purchase)
                         }
+                    } else
+                    {
+                        activity.sharedPreferences.edit()
+                            .putBoolean(Constants.KEY_IS_SUBSCRIBED, false)
+                            .apply()
                     }
                 }
             }
@@ -125,7 +137,6 @@ class Billing(val activity: MainActivity)
         billingClient.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK)
             {
-                Toast.makeText(activity, "You are a premium user now", Toast.LENGTH_SHORT).show()
                 activity.sharedPreferences.edit().putBoolean(Constants.KEY_IS_SUBSCRIBED, true)
                     .apply()
             }

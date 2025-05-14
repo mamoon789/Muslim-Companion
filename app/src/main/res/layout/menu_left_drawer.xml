@@ -3,182 +3,163 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/quran"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onClick"
+        android:padding="10dp"
+        android:paddingStart="0dp"
         android:text="@string/quran"
+        android:textColor="@color/grey_text"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="@color/grey"
+        app:layout_constraintBottom_toTopOf="@+id/hadith"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <TextView
+        android:id="@+id/hadith"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
         android:padding="10dp"
+        android:paddingStart="0dp"
+        android:text="@string/hadith"
+        android:textColor="@color/grey_text"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/prayer"
-        app:layout_constraintStart_toStartOf="@+id/prayer"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/quran"
+        app:layout_constraintTop_toBottomOf="@+id/quran" />
 
     <TextView
         android:id="@+id/prayer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:paddingStart="0dp"
         android:text="@string/prayer_times"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:textColor="@color/grey"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
-        app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/quran" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Calender"
-        android:textSize="14sp"
-        android:textStyle="bold"
         android:textColor="@color/grey_text"
-        android:padding="10dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/qibla"
-        app:layout_constraintStart_toStartOf="@+id/qibla"
-        app:layout_constraintTop_toBottomOf="@+id/prayer"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="@+id/hadith"
+        app:layout_constraintTop_toBottomOf="@+id/hadith" />
 
     <TextView
         android:id="@+id/qibla"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:paddingStart="0dp"
         android:text="@string/qibla"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:textColor="@color/grey"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/settings"
-        app:layout_constraintStart_toStartOf="@+id/settings"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"/>
-
-    <TextView
-        android:id="@+id/settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Settings"
-        android:textSize="14sp"
-        android:textStyle="bold"
         android:textColor="@color/grey_text"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/mosque"
-        app:layout_constraintStart_toStartOf="@+id/mosque"
-        app:layout_constraintTop_toBottomOf="@+id/qibla"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/mosque"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mosque"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="@color/grey"
+        app:layout_constraintBottom_toTopOf="@+id/tasbeeh"
+        app:layout_constraintStart_toStartOf="@+id/prayer"
+        app:layout_constraintTop_toBottomOf="@+id/prayer" />
+
+    <TextView
+        android:id="@+id/tasbeeh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:padding="10dp"
+        android:paddingStart="0dp"
+        android:text="@string/tasbeeh"
+        android:textColor="@color/grey_text"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/zakat"
-        app:layout_constraintStart_toStartOf="@+id/zakat"
-        app:layout_constraintTop_toBottomOf="@+id/settings"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="@+id/qibla"
+        app:layout_constraintTop_toBottomOf="@+id/qibla" />
 
     <TextView
         android:id="@+id/zakat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:paddingStart="0dp"
         android:text="@string/zakat"
+        android:textColor="@color/grey_text"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="@color/grey"
-        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/mecca"
-        app:layout_constraintStart_toStartOf="@+id/mecca"
-        app:layout_constraintTop_toBottomOf="@+id/mosque" />
+        app:layout_constraintStart_toStartOf="@+id/tasbeeh"
+        app:layout_constraintTop_toBottomOf="@+id/tasbeeh" />
 
     <TextView
         android:id="@+id/mecca"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:paddingStart="0dp"
         android:text="@string/live_mecca"
+        android:textColor="@color/grey_text"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="@color/grey"
-        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/medina"
-        app:layout_constraintStart_toStartOf="@+id/medina"
+        app:layout_constraintStart_toStartOf="@+id/zakat"
         app:layout_constraintTop_toBottomOf="@+id/zakat" />
 
     <TextView
         android:id="@+id/medina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:paddingStart="0dp"
         android:text="@string/live_medina"
+        android:textColor="@color/grey_text"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="@color/grey"
-        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/asmaAlHusna"
-        app:layout_constraintStart_toStartOf="@+id/asmaAlHusna"
+        app:layout_constraintStart_toStartOf="@+id/mecca"
         app:layout_constraintTop_toBottomOf="@+id/mecca" />
 
     <TextView
         android:id="@+id/asmaAlHusna"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:paddingStart="0dp"
         android:text="@string/asmaalhusna"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:textColor="@color/grey"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/removeAds"
-        app:layout_constraintStart_toStartOf="@+id/removeAds"
-        app:layout_constraintTop_toBottomOf="@+id/medina" />
-
-    <TextView
-        android:id="@+id/removeAds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="@string/premium"
-        android:textColor="@color/purple_dark"
+        android:textColor="@color/grey_text"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/share"
-        app:layout_constraintStart_toStartOf="@id/share"
-        app:layout_constraintTop_toBottomOf="@+id/asmaAlHusna" />
+        app:layout_constraintStart_toStartOf="@+id/medina"
+        app:layout_constraintTop_toBottomOf="@+id/medina" />
 
     <TextView
         android:id="@+id/share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:paddingStart="0dp"
         android:text="@string/share"
-        android:textColor="@color/purple_dark"
+        android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/review"
-        app:layout_constraintStart_toStartOf="@id/review"
-        app:layout_constraintTop_toBottomOf="@+id/removeAds" />
+        app:layout_constraintStart_toStartOf="@+id/asmaAlHusna"
+        app:layout_constraintTop_toBottomOf="@+id/asmaAlHusna" />
 
     <TextView
         android:id="@+id/review"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
         android:padding="10dp"
+        android:paddingStart="0dp"
         android:text="@string/review"
-        android:textColor="@color/purple_dark"
+        android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/share"
         app:layout_constraintTop_toBottomOf="@+id/share" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -186,6 +167,68 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/quran"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/crown"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleY="1.25"
+            android:src="@drawable/crown"
+            app:layout_constraintBottom_toTopOf="@+id/goPremium"
+            app:layout_constraintEnd_toEndOf="@+id/goPremium"
+            app:layout_constraintStart_toStartOf="@+id/goPremium"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/goPremium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/premium"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/goPremiumMsg"
+            app:layout_constraintStart_toStartOf="@+id/goPremiumMsg"
+            app:layout_constraintTop_toBottomOf="@+id/crown" />
+
+        <TextView
+            android:id="@+id/goPremiumMsg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:justificationMode="inter_word"
+            android:text="@string/no_ads"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/goPremium" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/goPremiumMsg"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/goPremiumMsg"
+            app:layout_constraintTop_toBottomOf="@+id/goPremiumMsg"
+            app:layout_editor_absoluteY="130dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

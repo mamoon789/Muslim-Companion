@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".views.FaqsFragment">
 
     <TextView
@@ -29,6 +30,6 @@
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:listitem="@layout/faq_row" />
+        tools:listitem="@layout/row_faq" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.iqra.alquran.R
-import com.iqra.alquran.utils.Constants
 
 class FaqsFragment : Fragment()
 {
@@ -60,7 +59,7 @@ class FaqsFragment : Fragment()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
         {
             val view =
-                LayoutInflater.from(parent.context).inflate(R.layout.faq_row, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.row_faq, parent, false)
             return ViewHolder(view)
         }
 

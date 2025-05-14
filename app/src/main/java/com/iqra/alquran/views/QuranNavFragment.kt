@@ -26,10 +26,12 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import com.iqra.alquran.network.models.Quran.Data.Surah
 
-class QuranNavFragment : Fragment() {
+class QuranNavFragment : Fragment()
+{
     private lateinit var adapter: ViewPagerFragmentAdapter
     private lateinit var surahs: MutableList<Surah>
 
+    private lateinit var mainActivity: MainActivity
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var cv: CardView
     private lateinit var tvLastRead: TextView
@@ -39,25 +41,22 @@ class QuranNavFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_quran_nav, container, false)
+    ): View?
+    {
+        mainActivity = activity as MainActivity
+        sharedPreferences = mainActivity.getSharedPreferences(
+            "Settings",
+            Context.MODE_PRIVATE
+        )
+        surahs = mainActivity.surahs
 
+        val view = inflater.inflate(R.layout.fragment_quran_nav, container, false)
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
-
         cv = view.findViewById(R.id.cardView)
         tvLastRead = view.findViewById(R.id.textView6)
         tvSurah = view.findViewById(R.id.textView7)
         tvAyah = view.findViewById(R.id.textView8)
-
-//        tvLastRead.text = Constants.RESOURCES?.getString(R.string.last_read)
-
-        sharedPreferences = activity!!.getSharedPreferences(
-            "Settings",
-            Context.MODE_PRIVATE
-        )
-
-        surahs = (activity as MainActivity).surahs
 
         adapter = ViewPagerFragmentAdapter(
             childFragmentManager,
@@ -78,7 +77,8 @@ class QuranNavFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onResume() {
+    override fun onResume()
+    {
         super.onResume()
 
         val id: String = sharedPreferences.getString(
@@ -89,19 +89,20 @@ class QuranNavFragment : Fragment() {
         val surahIndex = id.substring(5, id.indexOf('_')).toInt()
         val ayahIndex = id.substring(id.indexOf('_') + 5).toInt()
 
-        tvSurah.text = surahs[surahIndex].englishName;
-        tvAyah.text = "Ayah No. ${ayahIndex + 1}";
-
-        adapter.refreshFragment(2, QuranBookmarkPagerFragment.newInstance())
+        tvSurah.text = surahs[surahIndex].englishName + ",";
+        tvAyah.text = "Ayah ${ayahIndex + 1}";
 
         cv.setOnClickListener {
-            val transaction = activity?.supportFragmentManager?.beginTransaction()
-            transaction?.replace(
-                R.id.container,
-                QuranFragment.newInstance(surahIndex, ayahIndex)
-            );
-            transaction?.addToBackStack(null);
-            transaction?.commit();
+            mainActivity.showPremiumDialogOrAd {
+                val transaction = mainActivity.supportFragmentManager.beginTransaction()
+                transaction.replace(
+                    R.id.container,
+                    QuranFragment.newInstance(surahIndex, ayahIndex),
+                    "quran"
+                );
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
         }
     }
 
@@ -109,23 +110,22 @@ class QuranNavFragment : Fragment() {
         fragmentManager: FragmentManager,
         lifecycle: Lifecycle,
         var fragments: MutableList<Fragment>,
-    ) : FragmentStateAdapter(fragmentManager, lifecycle) {
+    ) : FragmentStateAdapter(fragmentManager, lifecycle)
+    {
 
-        override fun createFragment(position: Int): Fragment {
+        override fun createFragment(position: Int): Fragment
+        {
             return fragments[position]
         }
 
-        override fun getItemCount(): Int {
+        override fun getItemCount(): Int
+        {
             return 3
-        }
-
-        fun refreshFragment(index: Int, fragment: Fragment) {
-            fragments[index] = fragment
-            notifyItemChanged(index)
         }
     }
 
-    companion object {
+    companion object
+    {
         @JvmStatic
         fun newInstance() = QuranNavFragment()
     }

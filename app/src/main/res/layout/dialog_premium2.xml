@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="20dp">
+
+    <ImageView
+        android:id="@+id/crown2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/support5"
+        android:scaleX="1"
+        android:translationY="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/goPremium2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/goPremium2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/support"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/goPremiumMsg2"
+        app:layout_constraintEnd_toEndOf="@+id/crown2"
+        app:layout_constraintStart_toStartOf="@+id/crown2"
+        app:layout_constraintTop_toBottomOf="@+id/crown2" />
+
+    <TextView
+        android:id="@+id/goPremiumMsg2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/donate"
+        android:textAlignment="center"
+        android:textColor="@color/grey_text"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/reward"
+        app:layout_constraintEnd_toEndOf="@+id/goPremium2"
+        app:layout_constraintStart_toStartOf="@+id/goPremium2"
+        app:layout_constraintTop_toBottomOf="@+id/goPremium2" />
+
+    <TextView
+        android:id="@+id/reward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/rewards"
+        android:textColor="@color/grey_text"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/charges"
+        app:layout_constraintEnd_toEndOf="@+id/goPremiumMsg2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@+id/goPremiumMsg2"
+        app:layout_constraintTop_toBottomOf="@+id/goPremiumMsg2" />
+
+    <TextView
+        android:id="@+id/charges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:background="@color/purple_bg"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="7dp"
+        android:text="@string/reward_points"
+        android:textColor="@color/grey_text"
+        android:textSize="16sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/subscribe"
+        app:layout_constraintEnd_toEndOf="@+id/reward"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@+id/reward"
+        app:layout_constraintTop_toBottomOf="@+id/reward" />
+
+    <Button
+        android:id="@+id/subscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/button"
+        android:paddingHorizontal="50dp"
+        android:text="Subscribe"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/charges"
+        app:layout_constraintStart_toStartOf="@+id/charges"
+        app:layout_constraintTop_toBottomOf="@+id/charges" />
+
+    <Button
+        android:id="@+id/close"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

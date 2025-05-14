@@ -2,31 +2,44 @@
 
 package com.iqra.alquran.utils
 
-import android.content.Context
+import android.os.Build
 import androidx.fragment.app.FragmentActivity
+import com.google.android.gms.ads.AdSize
 import com.google.gson.Gson
 import com.iqra.alquran.BuildConfig
-import com.iqra.alquran.R
 import com.iqra.alquran.network.models.Quran
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 import com.iqra.alquran.network.models.Quran.Data.Surah
 
 class Utility
 {
     companion object
     {
+        fun getBannerAdSize(activity: FragmentActivity): AdSize
+        {
+            val displayMetrics = activity.resources.displayMetrics
+            val adWidthPixels = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            {
+                val windowMetrics = activity.windowManager.currentWindowMetrics
+                windowMetrics.bounds.width()
+            } else
+            {
+                displayMetrics.widthPixels
+            }
+            val density = displayMetrics.density
+            val adWidth = (adWidthPixels / density).toInt()
+            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth)
+        }
+
         fun getQuran(activity: FragmentActivity): Quran
         {
-            val inputStream = activity.assets.open("quran.json")
+            val inputStream = activity.assets.open("id/quran.json")
             val quranJson = inputStream.bufferedReader().use { it.readText() }
             return Gson().fromJson(quranJson, Quran::class.java)
         }
 
         private fun getSurahs(activity: FragmentActivity): MutableList<Surah>
         {
-            var inputStream = activity.assets.open("translation.json")
+            var inputStream = activity.assets.open("id/translation.json")
             var quranJson = inputStream.bufferedReader().use { it.readText() }
             val surahsTranslation = Gson().fromJson(quranJson, Quran::class.java).data.surahs
 

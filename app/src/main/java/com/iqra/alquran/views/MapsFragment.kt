@@ -1,23 +1,17 @@
 package com.iqra.alquran.views
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.common.api.ApiException
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.PlaceLikelihood
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
-import com.google.android.libraries.places.api.net.PlacesClient
+import com.iqra.alquran.BuildConfig
 import com.iqra.alquran.R
 import com.iqra.alquran.utils.Constants
 import com.iqra.alquran.viewmodels.MainViewModel
@@ -48,7 +42,7 @@ class MapsFragment : BaseFragment(), BaseFragment.Map {
             "$lat, $long",
             "1000",
             "mosque",
-            Constants.API_KEY
+            BuildConfig.API_KEY
         )
 
         viewModel.nearByPlaces.observe(viewLifecycleOwner) { places ->
@@ -90,14 +84,14 @@ class MapsFragment : BaseFragment(), BaseFragment.Map {
 
                 mainActivity.showSnackBar(message, message == Constants.MSG_CONNECT_INTERNET)
             } else {
-                mainActivity.showCustomDialog(R.layout.progress_dialog)
+                mainActivity.showCustomDialog(R.layout.dialog_progress)
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Places.initialize(activity!!.applicationContext, Constants.API_KEY)
+        Places.initialize(activity!!.applicationContext, BuildConfig.API_KEY)
     }
 
     override fun onCreateView(
@@ -105,7 +99,7 @@ class MapsFragment : BaseFragment(), BaseFragment.Map {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         mainActivity = activity as MainActivity
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }

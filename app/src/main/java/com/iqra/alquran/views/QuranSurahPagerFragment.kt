@@ -2,7 +2,6 @@ package com.iqra.alquran.views
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,21 +10,22 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.iqra.alquran.R
-import java.io.Serializable
 import com.iqra.alquran.network.models.Quran.Data.Surah
 
 @Suppress("UNCHECKED_CAST")
 class QuranSurahPagerFragment : Fragment() {
+    lateinit var mainActivity: MainActivity
     lateinit var surahs: MutableList<Surah>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainActivity = activity as MainActivity
+        surahs = mainActivity.surahs
+
         val view = inflater.inflate(R.layout.fragment_quran_surah_pager, container, false)
         val rvSurahs = view.findViewById<RecyclerView>(R.id.rvSurahs)
-
-        surahs = (activity as MainActivity).surahs
 
         rvSurahs.adapter = Adapter()
         rvSurahs.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
@@ -36,7 +36,7 @@ class QuranSurahPagerFragment : Fragment() {
     inner class Adapter : RecyclerView.Adapter<Adapter.ViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view =
-                LayoutInflater.from(parent.context).inflate(R.layout.surah_row, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.row_quran_surah, parent, false)
             return ViewHolder(view)
         }
 
@@ -68,14 +68,18 @@ class QuranSurahPagerFragment : Fragment() {
                 view.setOnClickListener(this)
             }
 
-            override fun onClick(v: View?) {
-                val transaction = activity?.supportFragmentManager?.beginTransaction()
-                transaction?.replace(
-                    R.id.container,
-                    QuranFragment.newInstance(surahIndex, ayahIndex)
-                );
-                transaction?.addToBackStack(null);
-                transaction?.commit();
+            override fun onClick(v: View?)
+            {
+                mainActivity.showPremiumDialogOrAd {
+                    val transaction = mainActivity.supportFragmentManager.beginTransaction()
+                    transaction.replace(
+                        R.id.container,
+                        QuranFragment.newInstance(surahIndex, ayahIndex),
+                        "quran"
+                    );
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
             }
         }
     }

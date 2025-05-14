@@ -40,8 +40,19 @@
         <!-- Navigation bar color. -->
         <item name="android:navigationBarColor">@color/white</item>
         <!-- Customize your theme here. -->
-<!--        <item name="android:windowIsTranslucent">true</item>-->
+        <!-- <item name="android:windowIsTranslucent">true</item>-->
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@android:color/transparent</item>
         <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">0</item>
+        <!-- BottomSheet theme. -->
+        <item name="bottomSheetDialogTheme">@style/Theme.BottomSheet</item>
+    </style>
+
+    <style name="Theme.BottomSheet" parent="@style/Theme.Design.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:navigationBarColor">@color/white</item>
+    </style>
+
+    <style name="AppSearchView" parent="@style/Widget.AppCompat.SearchView" >
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>

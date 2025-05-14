@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="20dp">
+
+    <TextView
+        android:id="@+id/tvHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Add Dhikr"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tvDhikr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tvDhikr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="Dhikr"
+        app:layout_constraintBottom_toTopOf="@+id/etDhikr"
+        app:layout_constraintStart_toStartOf="@+id/etDhikr"
+        app:layout_constraintTop_toBottomOf="@+id/tvHeading" />
+
+    <EditText
+        android:id="@+id/etDhikr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/field"
+        android:inputType="text"
+        android:padding="5dp"
+        android:paddingStart="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvDetail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDhikr" />
+
+    <TextView
+        android:id="@+id/tvDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="Detail (Optional)"
+        app:layout_constraintBottom_toTopOf="@+id/etDetail"
+        app:layout_constraintStart_toStartOf="@+id/etDetail"
+        app:layout_constraintTop_toBottomOf="@+id/etDhikr" />
+
+    <EditText
+        android:id="@+id/etDetail"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:background="@drawable/field"
+        android:gravity="top"
+        android:padding="5dp"
+        android:paddingStart="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvRepeat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDetail" />
+
+    <TextView
+        android:id="@+id/tvRepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="Repeat Time"
+        app:layout_constraintBottom_toTopOf="@+id/etRepeat"
+        app:layout_constraintStart_toStartOf="@+id/etRepeat"
+        app:layout_constraintTop_toBottomOf="@+id/etDetail" />
+
+    <EditText
+        android:id="@+id/etRepeat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/field"
+        android:inputType="number"
+        android:padding="5dp"
+        android:paddingStart="10dp"
+        android:text="100"
+        app:layout_constraintBottom_toTopOf="@+id/btSave"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRepeat" />
+
+    <Button
+        android:id="@+id/btSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/button"
+        android:paddingHorizontal="50dp"
+        android:text="Save"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/etRepeat"
+        app:layout_constraintStart_toStartOf="@+id/etRepeat"
+        app:layout_constraintTop_toBottomOf="@+id/etRepeat" />
+
+    <ImageButton
+        android:id="@+id/ibClose"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:background="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/close" />
+</androidx.constraintlayout.widget.ConstraintLayout>

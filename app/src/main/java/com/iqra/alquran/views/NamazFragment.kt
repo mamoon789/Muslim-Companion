@@ -2,22 +2,32 @@ package com.iqra.alquran.views
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Address
+import android.content.SharedPreferences
 import android.location.Geocoder
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowMetrics
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.google.ads.mediation.admob.AdMobAdapter
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.iqra.alquran.R
+import com.iqra.alquran.application.MyApplication
 import com.iqra.alquran.network.models.NamazTimings.Data.Timings
 import com.iqra.alquran.utils.Constants
+import com.iqra.alquran.utils.Utility
 import com.iqra.alquran.viewmodels.MainViewModel
 import com.iqra.alquran.worker.AlarmWorker
 import kotlinx.coroutines.*
@@ -27,14 +37,13 @@ import java.util.*
 
 class NamazFragment : BaseFragment(), BaseFragment.Namaz
 {
-
+    lateinit var sharedPreferences: SharedPreferences
     lateinit var mainActivity: MainActivity
     lateinit var viewModel: MainViewModel
     lateinit var ivLeft: ImageView
     lateinit var ivRight: ImageView
     lateinit var tvDate: TextView
     lateinit var tvDuration: TextView
-    lateinit var tvAddress: TextView
     lateinit var llFajr: LinearLayout
     lateinit var llDhuhr: LinearLayout
     lateinit var llAsr: LinearLayout
@@ -50,9 +59,23 @@ class NamazFragment : BaseFragment(), BaseFragment.Namaz
     lateinit var swAsrAlarm: SwitchMaterial
     lateinit var swMaghribAlarm: SwitchMaterial
     lateinit var swIshaAlarm: SwitchMaterial
+    lateinit var adContainer: FrameLayout
     var countDownTimer: CountDownTimer? = null
     var namazAlarmList: MutableList<String>? = null
     var namazDate: Calendar = Calendar.getInstance()
+
+    @SuppressLint("SetTextI18n")
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mainActivity = activity as MainActivity
+        sharedPreferences =
+            mainActivity.getSharedPreferences("Settings", Context.MODE_PRIVATE).apply {
+                namazAlarmList =
+                    getStringSet(Constants.KEY_NAMAZ_ALARMS, setOf<String>())?.toMutableList()
+            }
+    }
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onCreateView(
@@ -60,11 +83,7 @@ class NamazFragment : BaseFragment(), BaseFragment.Namaz
         savedInstanceState: Bundle?
     ): View?
     {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        mainActivity = activity as MainActivity
-
         val view = inflater.inflate(R.layout.fragment_namaz, container, false)
-
         llFajr = view.findViewById(R.id.llFajr)
         llDhuhr = view.findViewById(R.id.llDhuhr)
         llAsr = view.findViewById(R.id.llAsr)
@@ -74,7 +93,6 @@ class NamazFragment : BaseFragment(), BaseFragment.Namaz
         ivRight = view.findViewById(R.id.ivRight)
         tvDate = view.findViewById(R.id.tvDate)
         tvDuration = view.findViewById(R.id.tvDuration)
-        tvAddress = view.findViewById(R.id.tvAddress)
         tvFajr = view.findViewById(R.id.tvFajrTime)
         tvDhuhr = view.findViewById(R.id.tvDhuhrTime)
         tvAsr = view.findViewById(R.id.tvAsrTime)
@@ -85,10 +103,9 @@ class NamazFragment : BaseFragment(), BaseFragment.Namaz
         swAsrAlarm = view.findViewById(R.id.swAsrAlarm)
         swMaghribAlarm = view.findViewById(R.id.swMaghribAlarm)
         swIshaAlarm = view.findViewById(R.id.swIshaAlarm)
+        adContainer = view.findViewById(R.id.adContainer)
 
-        val sharedPreferences = mainActivity.getSharedPreferences("Settings", Context.MODE_PRIVATE)
-        namazAlarmList = sharedPreferences.getStringSet(Constants.KEY_NAMAZ_ALARMS, setOf<String>())
-            ?.toMutableList()
+        mainActivity.loadBanner(adContainer)
 
         for (alarm in namazAlarmList!!)
         {
@@ -102,6 +119,59 @@ class NamazFragment : BaseFragment(), BaseFragment.Namaz
                 {
                     swIshaAlarm.isChecked = true
                 }
+            }
+        }
+
+        viewModel.namazTimings.observe(viewLifecycleOwner) {
+            if (it.data != null)
+            {
+                if (namazDate.get(Calendar.DAY_OF_MONTH) == Calendar.getInstance()
+                        .get(Calendar.DAY_OF_MONTH)
+                )
+                {
+                    startTimerForNextPrayer(it.data.data.timings)
+                } else
+                {
+                    resetLayout(null)
+                }
+
+                tvFajr.text = it.data.data.timings.Fajr
+                tvDhuhr.text = it.data.data.timings.Dhuhr
+                tvAsr.text = it.data.data.timings.Asr
+                tvMaghrib.text = it.data.data.timings.Maghrib
+                tvIsha.text = it.data.data.timings.Isha
+
+                val date = SimpleDateFormat("dd-MM-yyyy", Locale.US).format(namazDate.time)
+                viewModel.getHijriTime(date)
+
+            } else if (it.message != null)
+            {
+                mainActivity.hideDialog()
+                mainActivity.showSnackBar(it.message, it.message == Constants.MSG_CONNECT_INTERNET)
+            } else
+            {
+                mainActivity.showCustomDialog(R.layout.dialog_progress)
+            }
+        }
+
+        viewModel.hijriTime.observe(viewLifecycleOwner) {
+            if (it.data != null)
+            {
+                mainActivity.hideDialog()
+
+                val hijriDate = it.data.data.hijri
+                tvDate.text = " " + hijriDate.day +
+                        " " + hijriDate.month.en +
+                        " " + hijriDate.year +
+                        " " + hijriDate.designation.abbreviated
+
+            } else if (it.message != null)
+            {
+                mainActivity.hideDialog()
+                mainActivity.showSnackBar(it.message, it.message == Constants.MSG_CONNECT_INTERNET)
+            } else
+            {
+                mainActivity.showCustomDialog(R.layout.dialog_progress)
             }
         }
 
@@ -186,92 +256,6 @@ class NamazFragment : BaseFragment(), BaseFragment.Namaz
             editor.apply()
         }
 
-        viewModel.namazTimings.observe(viewLifecycleOwner) {
-            if (it.data != null)
-            {
-                if (namazDate.get(Calendar.DAY_OF_MONTH) == Calendar.getInstance()
-                        .get(Calendar.DAY_OF_MONTH)
-                )
-                {
-                    startTimerForNextPrayer(it.data.data.timings)
-                } else
-                {
-                    resetLayout(null)
-                }
-
-                tvFajr.text = it.data.data.timings.Fajr
-                tvDhuhr.text = it.data.data.timings.Dhuhr
-                tvAsr.text = it.data.data.timings.Asr
-                tvMaghrib.text = it.data.data.timings.Maghrib
-                tvIsha.text = it.data.data.timings.Isha
-
-                val date = SimpleDateFormat("dd-MM-yyyy", Locale.US).format(namazDate.time)
-                viewModel.getHijriTime(date)
-
-            } else if (it.message != null)
-            {
-                mainActivity.hideDialog()
-
-                val message = when (it.message)
-                {
-                    Constants.MSG_TRY_LATER ->
-                    {
-                        getString(R.string.msg_try_later)
-                    }
-                    Constants.MSG_CONNECT_INTERNET ->
-                    {
-                        getString(R.string.msg_connect_internet)
-                    }
-                    else ->
-                    {
-                        it.message
-                    }
-                }
-
-                mainActivity.showSnackBar(message, message == Constants.MSG_CONNECT_INTERNET)
-            } else
-            {
-                mainActivity.showCustomDialog(R.layout.progress_dialog)
-            }
-        }
-
-        viewModel.hijriTime.observe(viewLifecycleOwner) {
-            if (it.data != null)
-            {
-                mainActivity.hideDialog()
-
-                val hijriDate = it.data.data.hijri
-                tvDate.text = " " + hijriDate.day +
-                        " " + hijriDate.month.en +
-                        " " + hijriDate.year +
-                        " " + hijriDate.designation.abbreviated
-
-            } else if (it.message != null)
-            {
-                mainActivity.hideDialog()
-
-                val message = when (it.message)
-                {
-                    Constants.MSG_TRY_LATER ->
-                    {
-                        getString(R.string.msg_try_later)
-                    }
-                    Constants.MSG_CONNECT_INTERNET ->
-                    {
-                        getString(R.string.msg_connect_internet)
-                    }
-                    else ->
-                    {
-                        it.message
-                    }
-                }
-
-                mainActivity.showSnackBar(message, message == Constants.MSG_CONNECT_INTERNET)
-            } else
-            {
-                mainActivity.showCustomDialog(R.layout.progress_dialog)
-            }
-        }
         return view
     }
 
@@ -398,33 +382,16 @@ class NamazFragment : BaseFragment(), BaseFragment.Namaz
         fun newInstance() = NamazFragment()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun getNamazTimings()
     {
-        val geocoder = Geocoder(mainActivity, Locale.getDefault())
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        {
-            geocoder.getFromLocation(lat, long, 1) { addressList ->
-                if (addressList.size > 0)
-                {
-                    val locality = addressList.first().locality
-                    val country = addressList.first().countryName
-                    tvAddress.text = " $locality, $country"
-                }
-            }
-        }else{
-            val addressList = geocoder.getFromLocation(lat,long,1)
-            if (addressList != null && addressList.size > 0)
-            {
-                val locality = addressList.first().locality
-                val country = addressList.first().countryName
-                tvAddress.text = " $locality, $country"
-            }
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(500)
+            viewModel.getNamazTimings(
+                (namazDate.timeInMillis / 1000).toString(),
+                lat.toString(),
+                long.toString()
+            )
         }
-
-        viewModel.getNamazTimings(
-            (namazDate.timeInMillis / 1000).toString(),
-            lat.toString(),
-            long.toString()
-        )
     }
 }

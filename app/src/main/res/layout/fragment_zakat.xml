@@ -9,104 +9,90 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
         app:cardBackgroundColor="@color/purple"
         app:cardCornerRadius="10dp"
-        app:cardElevation="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintBottom_toTopOf="@+id/tvCurrency"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:translationZ="10dp">
+            <TextView
+                android:id="@+id/tvZakatIs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/zakat_calculated"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@id/tvZakat"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tvZakatIs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/zakat_payable"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toTopOf="@+id/tvFaqs"
-                    app:layout_constraintDimensionRatio="1:.1"
-                    app:layout_constraintEnd_toEndOf="@+id/tvFaqs"
-                    app:layout_constraintStart_toStartOf="@+id/tvFaqs"
-                    app:layout_constraintTop_toBottomOf="@+id/etAsset" />
-
-                <TextView
-                    android:id="@+id/tvZakat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="USD 0"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/tvFaqs"
-                    app:layout_constraintDimensionRatio="1:.1"
-                    app:layout_constraintEnd_toEndOf="@+id/tvFaqs"
-                    app:layout_constraintStart_toStartOf="@+id/tvFaqs"
-                    app:layout_constraintTop_toBottomOf="@+id/etAsset" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tvZakat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="USD 0"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tvZakatIs"
+                app:layout_constraintTop_toBottomOf="@id/tvZakatIs" />
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="-20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/give" />
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="4dp"
+                android:scaleType="fitEnd"
+                android:src="@drawable/zakat"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvZakatIs"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.20" />
 
     <TextView
         android:id="@+id/tvCurrency"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="4dp"
         android:text="@string/choose_currency"
         android:textColor="@color/grey_text"
         app:layout_constraintBottom_toTopOf="@+id/spCurrency"
-        app:layout_constraintDimensionRatio="1:.1"
         app:layout_constraintEnd_toEndOf="@+id/spCurrency"
         app:layout_constraintStart_toStartOf="@+id/spCurrency"
-        app:layout_constraintTop_toTopOf="@id/guideline10"
+        app:layout_constraintTop_toBottomOf="@id/cardView"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tvNisabMeasure"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="4dp"
         android:text="@string/choose_nisab"
         android:textColor="@color/grey_text"
         app:layout_constraintBottom_toTopOf="@+id/spNisab"
-        app:layout_constraintDimensionRatio="1:.1"
         app:layout_constraintEnd_toEndOf="@+id/spNisab"
         app:layout_constraintStart_toStartOf="@+id/spNisab"
         app:layout_constraintTop_toBottomOf="@+id/spCurrency" />
@@ -114,12 +100,12 @@
     <TextView
         android:id="@+id/tvNisab"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="4dp"
         android:text="@string/enter_nisab"
         android:textColor="@color/grey_text"
         app:layout_constraintBottom_toTopOf="@+id/etNisab"
-        app:layout_constraintDimensionRatio="1:.1"
         app:layout_constraintEnd_toEndOf="@+id/etNisab"
         app:layout_constraintStart_toStartOf="@+id/etNisab"
         app:layout_constraintTop_toBottomOf="@+id/spNisab" />
@@ -127,12 +113,12 @@
     <TextView
         android:id="@+id/tvAsset"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="4dp"
         android:text="@string/enter_assets"
         android:textColor="@color/grey_text"
         app:layout_constraintBottom_toTopOf="@+id/etAsset"
-        app:layout_constraintDimensionRatio="1:.1"
         app:layout_constraintEnd_toEndOf="@+id/etAsset"
         app:layout_constraintStart_toStartOf="@+id/etAsset"
         app:layout_constraintTop_toBottomOf="@+id/etNisab" />
@@ -145,8 +131,8 @@
         android:editable="false"
         android:hint="0"
         android:inputType="none"
-        android:padding="5dp"
-        android:paddingStart="10dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
         android:textColor="@color/grey_text"
         app:layout_constraintBottom_toTopOf="@+id/tvAsset"
         app:layout_constraintEnd_toEndOf="@+id/tvAsset"
@@ -159,11 +145,11 @@
         android:layout_height="wrap_content"
         android:background="@drawable/field"
         android:hint="0"
-        android:textColor="@color/grey_text"
         android:inputType="number"
         android:maxLength="11"
-        android:padding="5dp"
-        android:paddingStart="10dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
+        android:textColor="@color/grey_text"
         app:layout_constraintBottom_toTopOf="@+id/tvFaqs"
         app:layout_constraintEnd_toEndOf="@+id/tvFaqs"
         app:layout_constraintStart_toStartOf="@+id/tvFaqs"
@@ -172,10 +158,10 @@
     <Spinner
         android:id="@+id/spCurrency"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/spinner"
+        android:paddingVertical="7dp"
         app:layout_constraintBottom_toTopOf="@+id/tvNisabMeasure"
-        app:layout_constraintDimensionRatio="1:.1"
         app:layout_constraintEnd_toEndOf="@+id/tvNisabMeasure"
         app:layout_constraintStart_toStartOf="@+id/tvNisabMeasure"
         app:layout_constraintTop_toBottomOf="@+id/tvCurrency" />
@@ -183,10 +169,10 @@
     <Spinner
         android:id="@+id/spNisab"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/spinner"
+        android:paddingVertical="7dp"
         app:layout_constraintBottom_toTopOf="@+id/tvNisab"
-        app:layout_constraintDimensionRatio="1:.1"
         app:layout_constraintEnd_toEndOf="@+id/tvNisab"
         app:layout_constraintStart_toStartOf="@+id/tvNisab"
         app:layout_constraintTop_toBottomOf="@+id/tvNisabMeasure" />
@@ -194,16 +180,24 @@
     <TextView
         android:id="@+id/tvFaqs"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="32dp"
         android:text="@string/faqs"
         android:textColor="@color/quantum_googblue"
         android:textStyle="bold"
-        app:layout_constraintDimensionRatio="1:.1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etAsset" />
+
+    <FrameLayout
+        android:id="@+id/adContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
