@@ -97,7 +97,7 @@ class Utility
                                     "</span>\n"
                             body += "</div>\n"
 
-                            body += "<div class='${BuildConfig.EDITION}'>\n"
+                            body += "<div class='${Constants.CURRENT_TRANSLATION}'>\n"
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}_tr'>${ayah.translation}</span>\n"
                             body += "</div>\n"
                             body += "<hr>\n"
@@ -115,7 +115,7 @@ class Utility
                                     "</span>\n"
                             body += "</div>\n"
 
-                            body += "<div class='${BuildConfig.EDITION}'>\n"
+                            body += "<div class='${Constants.CURRENT_TRANSLATION}'>\n"
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}_tr'>${ayah.translation}</span>\n"
                             body += "</div>\n"
                             body += "<hr>\n"
@@ -132,7 +132,7 @@ class Utility
                                     "</span>\n"
                             body += "</div>\n"
 
-                            body += "<div class='${BuildConfig.EDITION}'>\n"
+                            body += "<div class='${Constants.CURRENT_TRANSLATION}'>\n"
                             body += "<span id='surah${surah.number - 1}_ayah${ayah.numberInSurah - 1}_tr'>${ayah.translation}</span>\n"
                             body += "</div>\n"
                         }
@@ -214,7 +214,7 @@ class Utility
         {
             if (activity == null) return ""
             val inputStream =
-                if (translationActive) activity.assets.open("juz_translation/${juz}")
+                if (translationActive) activity.assets.open("${Constants.CURRENT_TRANSLATION}/juz_translation/${juz}")
                 else activity.assets.open("juz/${juz}")
             return inputStream.bufferedReader().use { it.readText() }
         }

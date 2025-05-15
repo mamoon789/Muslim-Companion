@@ -45,7 +45,6 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
     lateinit var sharedPreferences: SharedPreferences
     var bookmarksList: MutableList<String>? = null
 
-    val edition = BuildConfig.EDITION
     lateinit var surahs: MutableList<Surah>
     var surahIndex = 0
     var ayahIndex = 0
@@ -474,7 +473,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
             mp = null
             tts.stop()
 
-            val result = tts.setLanguage(Locale(BuildConfig.EDITION))
+            val result = tts.setLanguage(Locale(Constants.CURRENT_TRANSLATION))
             if (!translationActive || result == TextToSpeech.LANG_AVAILABLE)
             {
                 print()
@@ -482,19 +481,19 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
             }
 
             mainActivity.showCustomDialog(
-                title = "For translation, install the ${Locale(BuildConfig.EDITION).displayName} voice data",
+                title = "For translation, install the ${Locale(Constants.CURRENT_TRANSLATION).displayName} voice data",
                 message = "To change language, follow these steps: \n\n" +
                         "1. Click --> \"Proceed\" \n" +
                         "2. Click --> \"Preferred engine\" \n" +
                         "3. Select --> \"Speech Recognition and Synthesis from Google\" \n" +
                         "4. Press --> Back button \n" +
                         "5. Click --> \"Language\" \n" +
-                        "6. Select -->  \"${Locale(BuildConfig.EDITION).displayName}\" \n\n" +
+                        "6. Select -->  \"${Locale(Constants.CURRENT_TRANSLATION).displayName}\" \n\n" +
                         "To change voice output, continue these steps: \n\n" +
                         "7. Press --> Back button \n" +
                         "8. Click --> Settings icon \n" +
                         "9. Click --> \"Install voice data\" \n" +
-                        "10. Select --> \"${Locale(BuildConfig.EDITION).displayName}\" \n" +
+                        "10. Select --> \"${Locale(Constants.CURRENT_TRANSLATION).displayName}\" \n" +
                         "11. Click --> \"Download\" \n" +
                         "12. Select --> Voice",
                 positiveTxt = "Proceed",
@@ -602,7 +601,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
     override fun onResume()
     {
         super.onResume()
-        tts.setLanguage(Locale(BuildConfig.EDITION))
+        tts.setLanguage(Locale(Constants.CURRENT_TRANSLATION))
         mainActivity.toolbar.inflateMenu(R.menu.menu3)
         mainActivity.toolbar.setOnMenuItemClickListener {
             btPlayback.isChecked = false
@@ -618,12 +617,12 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                         "3. Select --> \"Speech Recognition and Synthesis from Google\" \n" +
                         "4. Press --> Back button \n" +
                         "5. Click --> \"Language\" \n" +
-                        "6. Select -->  \"${Locale(BuildConfig.EDITION).displayName}\" \n\n" +
+                        "6. Select -->  \"${Locale(Constants.CURRENT_TRANSLATION).displayName}\" \n\n" +
                         "To change voice output, continue these steps: \n\n" +
                         "7. Press --> Back button \n" +
                         "8. Click --> Settings icon \n" +
                         "9. Click --> \"Install voice data\" \n" +
-                        "10. Select --> \"${Locale(BuildConfig.EDITION).displayName}\" \n" +
+                        "10. Select --> \"${Locale(Constants.CURRENT_TRANSLATION).displayName}\" \n" +
                         "11. Click --> \"Download\" \n" +
                         "12. Select --> Voice",
                 positiveTxt = "Proceed",

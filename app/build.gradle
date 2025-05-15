@@ -23,56 +23,24 @@ android {
     }
     flavorDimensions = ["default"]
     productFlavors {
-        english{
+        free{
             dimension "default"
-            buildConfigField "String","EDITION","\"en\""
             buildConfigField "String","API_KEY","\"AIzaSyAe8ulK5nG2H1-KDWp8g7qct06Oq7jY8m8\""
             buildConfigField "String","PRODUCT_ID","\"sub101\""
             buildConfigField "String","APPOPEN_AD_ID","\"ca-app-pub-1035415808955400/8170562075\""
             buildConfigField "String","INTERSTITIAL_AD_ID","\"ca-app-pub-1035415808955400/6606621748\""
             buildConfigField "String","NATIVE_AD_ID","\"ca-app-pub-1035415808955400/8915152519\""
             buildConfigField "String","BANNER_AD_ID","\"ca-app-pub-1035415808955400/1064388085\""
-            manifestPlaceholders["API_KEY"] = "\"AIzaSyAe8ulK5nG2H1-KDWp8g7qct06Oq7jY8m8\""
-            manifestPlaceholders["ADMOB_APP_ID"] = "\"ca-app-pub-1035415808955400~4363601783\""
+            manifestPlaceholders["API_KEY"] = "AIzaSyAe8ulK5nG2H1-KDWp8g7qct06Oq7jY8m8"
+            manifestPlaceholders["ADMOB_APP_ID"] = "ca-app-pub-1035415808955400~4363601783"
         }
-        urdu{
+        pro{
             dimension "default"
-            applicationIdSuffix ".urdu"
+            applicationIdSuffix ".pro"
             versionCode 1
             versionName "1.0"
-            buildConfigField "String","EDITION","\"ur\""
             buildConfigField "String","API_KEY","\"AIzaSyAe8ulK5nG2H1-KDWp8g7qct06Oq7jY8m8\""
-            buildConfigField "String","PRODUCT_ID","\"sub101_ur\""
-            buildConfigField "String","APPOPEN_AD_ID","\"ca-app-pub-1035415808955400/8170562075\""
-            buildConfigField "String","INTERSTITIAL_AD_ID","\"ca-app-pub-1035415808955400/6606621748\""
-            buildConfigField "String","NATIVE_AD_ID","\"ca-app-pub-1035415808955400/8915152519\""
-            buildConfigField "String","BANNER_AD_ID","\"ca-app-pub-1035415808955400/1064388085\""
-            manifestPlaceholders["API_KEY"] = "\"AIzaSyAe8ulK5nG2H1-KDWp8g7qct06Oq7jY8m8\""
-            manifestPlaceholders["ADMOB_APP_ID"] = "\"ca-app-pub-1035415808955400~4363601783\""
-        }
-        hindi{
-            dimension "default"
-            applicationIdSuffix ".hindi"
-            versionCode 1
-            versionName "1.0"
-            buildConfigField "String","EDITION","\"hi\""
-            buildConfigField "String","API_KEY","\"AIzaSyAe8ulK5nG2H1-KDWp8g7qct06Oq7jY8m8\""
-            buildConfigField "String","PRODUCT_ID","\"sub101_hi\""
-            buildConfigField "String","APPOPEN_AD_ID","\"ca-app-pub-1035415808955400/8170562075\""
-            buildConfigField "String","INTERSTITIAL_AD_ID","\"ca-app-pub-1035415808955400/6606621748\""
-            buildConfigField "String","NATIVE_AD_ID","\"ca-app-pub-1035415808955400/8915152519\""
-            buildConfigField "String","BANNER_AD_ID","\"ca-app-pub-1035415808955400/1064388085\""
-            manifestPlaceholders["API_KEY"] = "\"AIzaSyAe8ulK5nG2H1-KDWp8g7qct06Oq7jY8m8\""
-            manifestPlaceholders["ADMOB_APP_ID"] = "\"ca-app-pub-1035415808955400~4363601783\""
-        }
-        indonasian{
-            dimension "default"
-            applicationIdSuffix ".indonasian"
-            versionCode 1
-            versionName "1.0"
-            buildConfigField "String","EDITION","\"id\""
-            buildConfigField "String","API_KEY","\"AIzaSyAe8ulK5nG2H1-KDWp8g7qct06Oq7jY8m8\""
-            buildConfigField "String","PRODUCT_ID","\"sub101_id\""
+            buildConfigField "String","PRODUCT_ID","\"sub101\""
             buildConfigField "String","APPOPEN_AD_ID","\"ca-app-pub-1035415808955400/8170562075\""
             buildConfigField "String","INTERSTITIAL_AD_ID","\"ca-app-pub-1035415808955400/6606621748\""
             buildConfigField "String","NATIVE_AD_ID","\"ca-app-pub-1035415808955400/8915152519\""

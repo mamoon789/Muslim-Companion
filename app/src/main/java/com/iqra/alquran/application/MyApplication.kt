@@ -3,6 +3,7 @@ package com.iqra.alquran.application
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
@@ -236,6 +237,7 @@ import java.util.*
 class
 MyApplication : Application()
 {
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var activityLifecycleCallbacks: ActivityLifecycleCallbacks
     private lateinit var lifecycleEventObserver: LifecycleEventObserver
     lateinit var appOpenAdManager: AppOpenAdManager
@@ -246,6 +248,18 @@ MyApplication : Application()
     override fun onCreate()
     {
         super.onCreate()
+
+        sharedPreferences = getSharedPreferences(getString(R.string.settings), Context.MODE_PRIVATE)
+
+        if(BuildConfig.FLAVOR.equals("free")) {
+            Constants.CURRENT_TRANSLATION = "en"
+        } else {
+            sharedPreferences.apply {
+                edit().putBoolean(Constants.KEY_IS_SUBSCRIBED, true).apply()
+                Constants.CURRENT_TRANSLATION = getString(Constants.KEY_TRANSLATION, "en")!!
+            }
+        }
+
         activityLifecycleCallbacks = object : ActivityLifecycleCallbacks
         {
             override fun onActivityCreated(p0: Activity, p1: Bundle?)
@@ -290,31 +304,26 @@ MyApplication : Application()
                 }
 
                 CoroutineScope(Dispatchers.Main).launch {
-                    val sharedPreferences = getSharedPreferences(
-                        getString(R.string.settings),
-                        Context.MODE_PRIVATE
-                    )
-                    val isSubscribed =
-                        sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false)
-                    if (isSubscribed)
-                    {
-                        return@launch
-                    }
-
-                    var fragment =
-                        currentActivity.supportFragmentManager.findFragmentByTag("mecca")
+                    var fragment = currentActivity.supportFragmentManager.findFragmentByTag("mecca")
                     if (fragment != null) return@launch
 
                     fragment = currentActivity.supportFragmentManager.findFragmentByTag("medina")
                     if (fragment != null) return@launch
 
-                    fragment =
-                        currentActivity.supportFragmentManager.findFragmentByTag("filter-fragment")
+                    fragment = currentActivity.supportFragmentManager.findFragmentByTag("filter-fragment")
                     if (fragment != null) return@launch
 
                     fragment = currentActivity.supportFragmentManager.findFragmentByTag("splash")
-                    if (fragment == null)
-                    {
+
+                    val isSubscribed = sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false)
+                    if (isSubscribed) {
+                        if (fragment != null) {
+                            event.postValue(1)
+                        }
+                        return@launch
+                    }
+
+                    if (fragment == null) {
                         currentActivity.supportFragmentManager.beginTransaction()
                             .replace(R.id.container, LoadingFragment.newInstance(), "loading")
                             .addToBackStack(null)
