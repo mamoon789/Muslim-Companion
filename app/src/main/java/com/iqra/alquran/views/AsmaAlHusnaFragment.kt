@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-//import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter
+import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter
 import com.google.gson.Gson
 import com.iqra.alquran.BuildConfig
 import com.iqra.alquran.R
@@ -27,7 +27,7 @@ class AsmaAlHusnaFragment : Fragment()
     private lateinit var viewModel: MainViewModel
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var adapter: Adapter
-//    private lateinit var adapterAd: AdmobNativeAdAdapter
+    private lateinit var adapterAd: AdmobNativeAdAdapter
     private lateinit var rvAsmaAlHusna: RecyclerView
     private var asmaAlHusna = listOf<AsmaAlHusna.Data>()
 
@@ -40,13 +40,13 @@ class AsmaAlHusnaFragment : Fragment()
         sharedPreferences = mainActivity.getSharedPreferences("Settings", Context.MODE_PRIVATE)
 
         adapter = Adapter()
-//        adapterAd = AdmobNativeAdAdapter.Builder.with(
-//            if (BuildConfig.DEBUG) Constants.NATIVE_AD_ID else BuildConfig.NATIVE_AD_ID,
-//            adapter,
-//            "medium"
-//        )
-//            .adItemInterval(5)
-//            .build()
+        adapterAd = AdmobNativeAdAdapter.Builder.with(
+            if (BuildConfig.DEBUG) Constants.NATIVE_AD_ID else BuildConfig.NATIVE_AD_ID,
+            adapter,
+            "medium"
+        )
+            .adItemInterval(5)
+            .build()
 
         viewModel.getAsmaAlHusna()
 
@@ -77,7 +77,7 @@ class AsmaAlHusnaFragment : Fragment()
 
         if (!sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false))
         {
-            rvAsmaAlHusna.adapter = adapter
+            rvAsmaAlHusna.adapter = adapterAd
         } else
         {
             rvAsmaAlHusna.adapter = adapter

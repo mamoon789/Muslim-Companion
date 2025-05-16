@@ -32,7 +32,7 @@ class TasbeehNavFragment : Fragment()
     private lateinit var rvDhikr: RecyclerView
     private lateinit var dhikr: Dhikr
     private lateinit var adapter: Adapter
-//    private lateinit var adapterAd: AdmobNativeAdAdapter
+    private lateinit var adapterAd: AdmobNativeAdAdapter
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -47,13 +47,13 @@ class TasbeehNavFragment : Fragment()
             }
 
         adapter = Adapter()
-//        adapterAd = AdmobNativeAdAdapter.Builder.with(
-//            if (BuildConfig.DEBUG) Constants.NATIVE_AD_ID else BuildConfig.NATIVE_AD_ID,
-//            adapter,
-//            "medium"
-//        )
-//            .adItemInterval(5)
-//            .build()
+        adapterAd = AdmobNativeAdAdapter.Builder.with(
+            if (BuildConfig.DEBUG) Constants.NATIVE_AD_ID else BuildConfig.NATIVE_AD_ID,
+            adapter,
+            "medium"
+        )
+            .adItemInterval(5)
+            .build()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -66,7 +66,7 @@ class TasbeehNavFragment : Fragment()
         rvDhikr = view.findViewById(R.id.rvDhikr)
         if (!sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false))
         {
-            rvDhikr.adapter = adapter
+            rvDhikr.adapter = adapterAd
         } else
         {
             rvDhikr.adapter = adapter

@@ -19,7 +19,7 @@ import android.widget.ToggleButton
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-//import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter
+import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter
 import com.google.gson.Gson
 import com.iqra.alquran.BuildConfig
 import com.iqra.alquran.R
@@ -40,7 +40,7 @@ class HadithFragment : Fragment()
     private lateinit var rvHadiths: RecyclerView
     private lateinit var bookmarks: MutableList<Hadith.Hadiths.Data>
     private lateinit var adapter: Adapter
-//    private lateinit var adapterAd: AdmobNativeAdAdapter
+    private lateinit var adapterAd: AdmobNativeAdAdapter
     private var tbPlaybackCopy: ToggleButton? = null
     private var hadiths = listOf<Hadith.Hadiths.Data>()
 
@@ -68,13 +68,13 @@ class HadithFragment : Fragment()
         }
 
         adapter = Adapter()
-//        adapterAd = AdmobNativeAdAdapter.Builder.with(
-//            if (BuildConfig.DEBUG) Constants.NATIVE_AD_ID else BuildConfig.NATIVE_AD_ID,
-//            adapter,
-//            "medium"
-//        )
-//            .adItemInterval(4)
-//            .build()
+        adapterAd = AdmobNativeAdAdapter.Builder.with(
+            if (BuildConfig.DEBUG) Constants.NATIVE_AD_ID else BuildConfig.NATIVE_AD_ID,
+            adapter,
+            "medium"
+        )
+            .adItemInterval(4)
+            .build()
 
         viewModel.hadiths.observe(this) {
             mainActivity.hideDialog()
@@ -122,7 +122,7 @@ class HadithFragment : Fragment()
 
         if (!sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false))
         {
-            rvHadiths.adapter = adapter
+            rvHadiths.adapter = adapterAd
         } else
         {
             rvHadiths.adapter = adapter
