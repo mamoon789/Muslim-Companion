@@ -251,7 +251,7 @@ MyApplication : Application()
 
         sharedPreferences = getSharedPreferences(getString(R.string.settings), Context.MODE_PRIVATE)
 
-        if(BuildConfig.FLAVOR.equals("free")) {
+        if(BuildConfig.FLAVOR == "free") {
             Constants.CURRENT_TRANSLATION = "en"
         } else {
             sharedPreferences.apply {

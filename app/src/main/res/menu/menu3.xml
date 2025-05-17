@@ -3,8 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/audioSetting"
+        android:id="@+id/settings"
         android:icon="@drawable/audio_settings"
-        android:title="Audio Settings"
-        app:showAsAction="always"/>
+        android:title="Settings"
+        app:showAsAction="always">
+
+        <menu>
+            <item
+                android:id="@+id/page"
+                android:title="Page Settings" />
+            <item
+                android:id="@+id/audio"
+                android:title="Audio Settings" />
+        </menu>
+
+    </item>
 </menu>

@@ -28,7 +28,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener
 {
@@ -604,38 +606,303 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
         tts.setLanguage(Locale(Constants.CURRENT_TRANSLATION))
         mainActivity.toolbar.inflateMenu(R.menu.menu3)
         mainActivity.toolbar.setOnMenuItemClickListener {
-            btPlayback.isChecked = false
-            audioRunning = false
-            mp?.release()
-            mp = null
-            tts.stop()
-            mainActivity.showCustomDialog(
-                title = "Translation Audio Settings",
-                message = "To change language, follow these steps: \n\n" +
-                        "1. Click --> \"Proceed\" \n" +
-                        "2. Click --> \"Preferred engine\" \n" +
-                        "3. Select --> \"Speech Recognition and Synthesis from Google\" \n" +
-                        "4. Press --> Back button \n" +
-                        "5. Click --> \"Language\" \n" +
-                        "6. Select -->  \"${Locale(Constants.CURRENT_TRANSLATION).displayName}\" \n\n" +
-                        "To change voice output, continue these steps: \n\n" +
-                        "7. Press --> Back button \n" +
-                        "8. Click --> Settings icon \n" +
-                        "9. Click --> \"Install voice data\" \n" +
-                        "10. Select --> \"${Locale(Constants.CURRENT_TRANSLATION).displayName}\" \n" +
-                        "11. Click --> \"Download\" \n" +
-                        "12. Select --> Voice",
-                positiveTxt = "Proceed",
-                negativeTxt = "Later",
-                positiveListener = { _, _ ->
-                    mainActivity.hideDialog()
-                    Intent("com.android.settings.TTS_SETTINGS").apply {
-                        startActivity(this)
+            when(it.itemId) {
+                R.id.page -> {
+//                    val transaction = mainActivity.supportFragmentManager.beginTransaction()
+//                    transaction.replace(R.id.container, SettingsFragment.newInstance())
+//                    transaction.addToBackStack(null)
+//                    transaction.commit()
+
+                    val inflater = LayoutInflater.from(mainActivity)
+                    val view = inflater.inflate(R.layout.dialog_settings, null, false).apply {
+
+                        var script = ""
+                        var scriptFont = ""
+                        var translation = ""
+                        var translationFont = ""
+                        var scriptText = ""
+                        var translatedText = ""
+
+                        val spScriptFont: Spinner = findViewById(R.id.spScriptFont)
+                        val spTranslation: Spinner = findViewById(R.id.spTranslation)
+                        val spTranslationFont: Spinner = findViewById(R.id.spTranslationFont)
+                        val sbFontSize: SeekBar = findViewById(R.id.sbFontSize)
+                        val wv: WebView = findViewById(R.id.wb)
+                        val btSave: Button = findViewById(R.id.btSave)
+                        val ibClose: ImageButton = findViewById(R.id.ibClose)
+
+                        fun getSettings() {
+                            Constants.CURRENT_SCRIPT = Constants.SCRIPTS.keys.toList()[0]
+                            script = Constants.SCRIPTS.keys.toList()[0]
+                            scriptText = Constants.SCRIPTS.values.toList()[0]
+
+                            Constants.CURRENT_SCRIPT_FONT = sharedPreferences.getString(
+                                Constants.KEY_SCRIPT_FONT,
+                                Constants.AR_FONTS.values.toList()[0]
+                            )!!
+                            spScriptFont.setSelection(
+                                Constants.AR_FONTS.values.toList().indexOf(Constants.CURRENT_SCRIPT_FONT)
+                            )
+
+                            Constants.CURRENT_TRANSLATION = sharedPreferences.getString(
+                                Constants.KEY_TRANSLATION,
+                                Constants.TRANSLATIONS.keys.toList()[0]
+                            )!!
+                            spTranslation.setSelection(
+                                Constants.TRANSLATIONS.keys.toList().indexOf(Constants.CURRENT_TRANSLATION)
+                            )
+
+                            Constants.CURRENT_TRANSLATION_FONT = sharedPreferences.getString(
+                                Constants.KEY_TRANSLATION_FONT,
+                                Constants.EN_FONTS.values.toList()[0]
+                            )!!
+                            when (Constants.CURRENT_TRANSLATION) {
+                                "en" -> spTranslationFont.setSelection(
+                                    Constants.EN_FONTS.values.toList().indexOf(Constants.CURRENT_TRANSLATION_FONT)
+                                )
+                                "ur" -> spTranslationFont.setSelection(
+                                    Constants.UR_FONTS.values.toList().indexOf(Constants.CURRENT_TRANSLATION_FONT)
+                                )
+                            }
+
+                            Constants.CURRENT_ZOOM = sharedPreferences.getInt(
+                                Constants.KEY_ZOOM,
+                                100
+                            )
+                            CoroutineScope(Dispatchers.IO).launch {
+                                delay(TimeUnit.SECONDS.toMillis(0.5.toLong()))
+                                withContext(Dispatchers.Main) {
+                                    sbFontSize.progress = Constants.CURRENT_ZOOM
+                                }
+                            }
+                        }
+
+                        fun print() {
+                            val style = "<style>\n" +
+                                    "@import url('https://fonts.googleapis.com/css2?family=Ubuntu&family=Open+Sans&family=Poppins&family=Merriweather&family=Lora&display=swap');\n" +
+                                    "@import url('https://fonts.googleapis.com/css2?family=Tajawal&family=Amiri:wght@700&family=Almarai&family=Lateef&family=Scheherazade:wght@700&family=Harmattan&family=Mirza:wght@500&display=swap');\n" +
+                                    "@font-face {\n" +
+                                    "   font-family: 'indopak_font';\n" +
+                                    "   src: url('file:///android_asset/indopak_font.woff');\n" +
+                                    "}\n" +
+                                    "*{\n" +
+                                    "   text-align: justify;\n" +
+                                    "   text-align-last: center;\n" +
+                                    "}\n" +
+                                    "body {\n" +
+//                                    "   display: flex;\n" +
+//                                    "   justify-content: center;\n" +
+//                                    "   align-items: center;\n" +
+//                                    "   min-height: 100vh;\n" +
+//                                    "   margin: 0;\n" +
+//                                    "   padding: 16px;\n" +
+//                                    "   flex-direction: column;\n" +
+//                                    "   text-align: center;\n" +
+                                    "   background-color: #873ed511;\n" +
+                                    "}\n" +
+                                    ".ar {\n" +
+                                    "   font-family: $scriptFont;\n" +
+                                    "   padding-top: 5px;\n" +
+                                    "   padding-bottom: 10px;\n" +
+                                    "   font-size: 175%;\n" +
+                                    "   direction: rtl;\n" +
+                                    "}\n" +
+                                    ".ur {\n" +
+                                    "   font-family: $translationFont;\n" +
+                                    "   font-size: 150%;\n" +
+                                    "   padding-top: 5px;\n" +
+                                    "   padding-bottom: 10px;\n" +
+                                    "   direction: rtl;\n" +
+                                    "}\n" +
+                                    ".en {\n" +
+                                    "   font-family: $translationFont;\n" +
+                                    "   font-size: 100%;\n" +
+                                    "   padding-top: 5px;\n" +
+                                    "   padding-bottom: 10px;\n" +
+                                    "   direction: ltr;\n" +
+                                    "}\n" +
+                                    ".containerAyah {\n" +
+                                    "   color: black;\n" +
+                                    "   border: 1px solid black;\n" +
+                                    "   border-radius: 50%;\n" +
+                                    "   font-size: 0.5em;\n" +
+                                    "   display: inline-flex;\n" +
+                                    "   justify-content: center;\n" +
+                                    "   align-items: center;\n" +
+                                    "   padding: 0.5em;\n" +
+                                    "   width: 1em;height: 1em;\n" +
+                                    "}\n" +
+                                    "</style>\n"
+
+                            val body = "<body>\n" +
+                                    "<div class='ar'>\n" +
+                                    "<span>${scriptText}ِ<span class='containerAyah'>1</span></span>\n" +
+                                    "</div>\n" +
+                                    "<div class='$translation'>\n" +
+                                    "<span>$translatedText</span>\n" +
+                                    "</div>\n" +
+                                    "</body>\n"
+
+                            wv.loadDataWithBaseURL(
+                                null,
+                                "<html><head>$style</head>$body</html>",
+                                "text/html",
+                                "UTF-8", null
+                            ).toString()
+                        }
+
+                        val scriptFontAdapter: ArrayAdapter<String> =
+                            ArrayAdapter<String>(
+                                activity!!,
+                                android.R.layout.simple_spinner_item,
+                                Constants.AR_FONTS.keys.toList()
+                            )
+                        scriptFontAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        spScriptFont.adapter = scriptFontAdapter
+
+                        val translationAdapter: ArrayAdapter<String> =
+                            ArrayAdapter<String>(
+                                activity!!,
+                                android.R.layout.simple_spinner_item,
+                                Constants.TRANSLATIONS.keys.toList()
+                            )
+                        translationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        spTranslation.adapter = translationAdapter
+
+                        val translationFontAdapter: ArrayAdapter<String> =
+                            ArrayAdapter<String>(
+                                activity!!,
+                                android.R.layout.simple_spinner_item,
+                                Constants.EN_FONTS.keys.toList()
+                            )
+                        translationFontAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        spTranslationFont.adapter = translationFontAdapter
+
+                        getSettings()
+
+                        spScriptFont.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                            override fun onItemSelected(
+                                parent: AdapterView<*>?,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                scriptFont = Constants.AR_FONTS.values.toList()[position]
+                                print()
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>?) {
+                            }
+                        }
+
+                        spTranslation.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                            override fun onItemSelected(
+                                parent: AdapterView<*>?,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                translation = Constants.TRANSLATIONS.keys.toList()[position]
+                                translatedText = Constants.TRANSLATIONS.values.toList()[position]
+                                translationFontAdapter.clear()
+                                when (translation) {
+                                    "en" -> translationFontAdapter.addAll(Constants.EN_FONTS.keys.toList())
+                                    "ur" -> translationFontAdapter.addAll(Constants.UR_FONTS.keys.toList())
+                                }
+                                translationFontAdapter.notifyDataSetChanged()
+                                print()
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>?) {
+                            }
+                        }
+
+                        spTranslationFont.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                            override fun onItemSelected(
+                                parent: AdapterView<*>?,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                when (translation) {
+                                    "en" -> translationFont = Constants.EN_FONTS.values.toList()[position]
+                                    "ur" -> translationFont = Constants.UR_FONTS.values.toList()[position]
+                                }
+                                print()
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>?) {
+                            }
+                        }
+
+                        sbFontSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                            override fun onProgressChanged(
+                                seekBar: SeekBar, progress: Int,
+                                fromUser: Boolean
+                            ) {
+                                wv.settings.textZoom = progress
+                            }
+
+                            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                            }
+
+                            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                            }
+                        })
+
+                        btSave.setOnClickListener {
+                            val editor = sharedPreferences.edit()
+                            editor.putString(Constants.KEY_SCRIPT, script)
+                            editor.putString(Constants.KEY_SCRIPT_FONT, scriptFont)
+                            editor.putString(Constants.KEY_TRANSLATION, translation)
+                            editor.putString(Constants.KEY_TRANSLATION_FONT, translationFont)
+                            editor.putInt(
+                                Constants.KEY_ZOOM, wv.settings.textZoom
+                            )
+                            editor?.apply()
+                        }
+
+                        ibClose.setOnClickListener {
+                            mainActivity.hideDialog()
+                        }
                     }
-                },
-                negativeListener = { _, _ ->
-                    mainActivity.hideDialog()
-                })
+                    mainActivity.showCustomDialog(layout = view)
+                }
+                R.id.audio -> {
+                    btPlayback.isChecked = false
+                    audioRunning = false
+                    mp?.release()
+                    mp = null
+                    tts.stop()
+                    mainActivity.showCustomDialog(
+                        title = "Translation Audio Settings",
+                        message = "To change language, follow these steps: \n\n" +
+                                "1. Click --> \"Proceed\" \n" +
+                                "2. Click --> \"Preferred engine\" \n" +
+                                "3. Select --> \"Speech Recognition and Synthesis from Google\" \n" +
+                                "4. Press --> Back button \n" +
+                                "5. Click --> \"Language\" \n" +
+                                "6. Select -->  \"${Locale(Constants.CURRENT_TRANSLATION).displayName}\" \n\n" +
+                                "To change voice output, continue these steps: \n\n" +
+                                "7. Press --> Back button \n" +
+                                "8. Click --> Settings icon \n" +
+                                "9. Click --> \"Install voice data\" \n" +
+                                "10. Select --> \"${Locale(Constants.CURRENT_TRANSLATION).displayName}\" \n" +
+                                "11. Click --> \"Download\" \n" +
+                                "12. Select --> Voice",
+                        positiveTxt = "Proceed",
+                        negativeTxt = "Later",
+                        positiveListener = { _, _ ->
+                            mainActivity.hideDialog()
+                            Intent("com.android.settings.TTS_SETTINGS").apply {
+                                startActivity(this)
+                            }
+                        },
+                        negativeListener = { _, _ ->
+                            mainActivity.hideDialog()
+                        })
+                }
+            }
             false
         }
     }

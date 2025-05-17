@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
     private var progressDialog: AlertDialog? = null
     private var interstitialAd: InterstitialAd? = null
 
-    private lateinit var billing: Billing
+    private var billing: Billing? = null
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
@@ -181,11 +181,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
 
         firebaseAnalytics = Firebase.analytics
 
-        billing = Billing(this)
+        if (BuildConfig.FLAVOR == "free")
+        {
+            billing = Billing(this)
+        }
 
         surahs = Utility.getQuran(this).data.surahs
-
-//        Utility.makeHtmlBodyWithTranslation(this)
 
         AlarmWorker.updateAlarms(this, false)
 
@@ -196,7 +197,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
     {
         super.onResume()
         installInAppUpdate()
-        billing.checkSubPurchase()
+        if (BuildConfig.FLAVOR == "free") billing?.checkSubPurchase()
     }
 
     private fun installInAppUpdate()
@@ -422,8 +423,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
 
             R.id.goPremium, R.id.goPremiumMsg ->
             {
-                firebaseAnalytics.logEvent("buy_subscription_drawer", null)
-                buySubscription()
+                if (BuildConfig.FLAVOR == "free")
+                {
+                    firebaseAnalytics.logEvent("buy_subscription_drawer", null)
+                    buySubscription()
+                }
             }
         }
         slidingRootNav.closeMenu()
@@ -433,7 +437,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
     {
         try
         {
-            billing.launchPurchaseFlow(callback)
+            billing?.launchPurchaseFlow(callback)
         } catch (e: Exception)
         {
             Log.e("billing", "onClick: " + e.message)

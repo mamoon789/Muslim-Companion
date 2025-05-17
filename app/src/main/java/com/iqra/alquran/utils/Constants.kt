@@ -58,7 +58,6 @@ object Constants {
     //region map for quran settings
     val SCRIPTS = mapOf(
         "indopak" to "بِسۡمِ اللهِ الرَّحۡمٰنِ الرَّحِيۡم",
-        "uthmani" to "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيم"
     )
     val TRANSLATIONS = mapOf(
         "en" to "In the name of Allah, the Entirely Merciful, the Especially Merciful.",

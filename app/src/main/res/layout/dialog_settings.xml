@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="20dp"
+    tools:ignore="WebViewLayout">
+
+    <TextView
+        android:id="@+id/tvHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Page Settings"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tvTranslation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+
+    <ImageButton
+        android:id="@+id/ibClose"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:background="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/close" />
+
+    <TextView
+        android:id="@+id/tvScriptFont"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="Choose Script Font"
+        android:textColor="@color/grey_text"
+        app:layout_constraintBottom_toTopOf="@+id/spScriptFont"
+        app:layout_constraintEnd_toEndOf="@+id/spScriptFont"
+        app:layout_constraintStart_toStartOf="@+id/spScriptFont"
+        app:layout_constraintTop_toBottomOf="@+id/spTranslation" />
+
+    <TextView
+        android:id="@+id/tvFontSize"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Pick Font Size"
+        android:textColor="@color/grey_text"
+        app:layout_constraintBottom_toTopOf="@+id/sbFontSize"
+        app:layout_constraintEnd_toEndOf="@+id/sbFontSize"
+        app:layout_constraintStart_toStartOf="@+id/sbFontSize"
+        app:layout_constraintTop_toBottomOf="@+id/spTranslationFont" />
+
+    <TextView
+        android:id="@+id/tvTranslation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="Choose Translation"
+        android:textColor="@color/grey_text"
+        app:layout_constraintBottom_toTopOf="@+id/spTranslation"
+        app:layout_constraintEnd_toEndOf="@+id/spTranslation"
+        app:layout_constraintStart_toStartOf="@+id/spTranslation"
+        app:layout_constraintTop_toBottomOf="@+id/tvHeading" />
+
+    <WebView
+        android:id="@+id/wb"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/purple_bg"
+        app:layout_constraintBottom_toTopOf="@+id/btSave"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sbFontSize" />
+
+
+    <SeekBar
+        android:id="@+id/sbFontSize"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:max="150"
+        android:min="100"
+        app:layout_constraintBottom_toTopOf="@+id/wb"
+        app:layout_constraintEnd_toEndOf="@+id/wb"
+        app:layout_constraintStart_toStartOf="@+id/wb"
+        app:layout_constraintTop_toBottomOf="@+id/tvFontSize" />
+
+    <Spinner
+        android:id="@+id/spScriptFont"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/spinner"
+        android:paddingVertical="7dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvTranslationFont"
+        app:layout_constraintEnd_toEndOf="@+id/tvTranslationFont"
+        app:layout_constraintStart_toStartOf="@+id/tvTranslationFont"
+        app:layout_constraintTop_toBottomOf="@+id/tvScriptFont" />
+
+    <Spinner
+        android:id="@+id/spTranslation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/spinner"
+        android:paddingVertical="7dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvScriptFont"
+        app:layout_constraintEnd_toEndOf="@+id/tvScriptFont"
+        app:layout_constraintStart_toStartOf="@+id/tvScriptFont"
+        app:layout_constraintTop_toBottomOf="@+id/tvTranslation" />
+
+    <TextView
+        android:id="@+id/tvTranslationFont"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="Choose Translation Font"
+        android:textColor="@color/grey_text"
+        app:layout_constraintBottom_toTopOf="@+id/spTranslationFont"
+        app:layout_constraintEnd_toEndOf="@+id/spTranslationFont"
+        app:layout_constraintStart_toStartOf="@+id/spTranslationFont"
+        app:layout_constraintTop_toBottomOf="@+id/spScriptFont" />
+
+    <Spinner
+        android:id="@+id/spTranslationFont"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/spinner"
+        android:paddingVertical="7dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvFontSize"
+        app:layout_constraintEnd_toEndOf="@+id/tvFontSize"
+        app:layout_constraintStart_toStartOf="@+id/tvFontSize"
+        app:layout_constraintTop_toBottomOf="@+id/tvTranslationFont" />
+
+    <Button
+        android:id="@+id/btSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/button"
+        android:paddingHorizontal="50dp"
+        android:text="Save"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/wb"
+        app:layout_constraintStart_toStartOf="@+id/wb"
+        app:layout_constraintTop_toBottomOf="@+id/wb" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
