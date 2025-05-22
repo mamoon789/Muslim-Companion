@@ -32,14 +32,14 @@ class Utility
 
         fun getQuran(activity: FragmentActivity): Quran
         {
-            val inputStream = activity.assets.open("id/quran.json")
+            val inputStream = activity.assets.open("${Constants.CURRENT_TRANSLATION}/quran.json")
             val quranJson = inputStream.bufferedReader().use { it.readText() }
             return Gson().fromJson(quranJson, Quran::class.java)
         }
 
         private fun getSurahs(activity: FragmentActivity): MutableList<Surah>
         {
-            var inputStream = activity.assets.open("id/translation.json")
+            var inputStream = activity.assets.open("${Constants.CURRENT_TRANSLATION}/translation.json")
             var quranJson = inputStream.bufferedReader().use { it.readText() }
             val surahsTranslation = Gson().fromJson(quranJson, Quran::class.java).data.surahs
 

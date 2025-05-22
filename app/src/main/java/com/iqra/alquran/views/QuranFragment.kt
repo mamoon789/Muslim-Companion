@@ -54,6 +54,29 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
     var translationActive = false
     var rukuTopPadding = -25
     var ayahContainerSize = 0.85
+    var sbListener = object : SeekBar.OnSeekBarChangeListener
+    {
+        var progress = 0
+        override fun onProgressChanged(
+            seekBar: SeekBar, progress: Int,
+            fromUser: Boolean
+        )
+        {
+            this.progress = progress
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar)
+        {
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar)
+        {
+            wv.settings.textZoom = progress
+            rukuTopPadding = -25 - (progress - 100) / 5
+            ayahContainerSize = 0.85 + (progress - 100) / 50
+            wv.loadUrl("javascript:updateRukuContainer($rukuTopPadding, $ayahContainerSize)")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,8 +85,8 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
     {
         val view = inflater.inflate(R.layout.fragment_quran_page, container, false)
         init(view)
-        print()
         listeners()
+        print()
         return view
     }
 
@@ -100,8 +123,9 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
         val headStart = "<head>\n"
 
         val style = "<style>\n" +
-                "@import url('https://fonts.googleapis.com/css2?family=Ubuntu&family=Open+Sans&family=Poppins&family=Merriweather&family=Lora&display=swap');\n" +
-                "@import url('https://fonts.googleapis.com/css2?family=Tajawal&family=Amiri:wght@700&family=Almarai&family=Lateef&family=Scheherazade:wght@700&family=Harmattan&family=Mirza:wght@500&display=swap');\n" +
+                "@import url('https://fonts.googleapis.com/css2?family=Arial&family=Scheherazade:wght@700&family=Lateef&family=Mirza&display=swap');\n" +
+                "@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Poppins&family=Georgia&family=Times+New+Roman&display=swap');\n" +
+                "@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&family=Lohit+Devanagari&family=Samarkan&family=Hind&family=Kalam&display=swap');\n" +
                 "@font-face {\n" +
                 "   font-family: 'indopak_font';\n" +
                 "   src: url('file:///android_asset/font.woff');\n" +
@@ -285,6 +309,15 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
             "text/html",
             "UTF-8", null
         ).toString()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(TimeUnit.SECONDS.toMillis(0.5.toLong()))
+            withContext(Dispatchers.Main) {
+                sb.progress = Constants.CURRENT_ZOOM
+                sbListener.onProgressChanged(sb, Constants.CURRENT_ZOOM, false)
+                sbListener.onStopTrackingTouch(sb)
+            }
+        }
     }
 
     private fun listeners()
@@ -400,29 +433,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
             }
         }
 
-        sb.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener
-        {
-            var progress = 0
-            override fun onProgressChanged(
-                seekBar: SeekBar, progress: Int,
-                fromUser: Boolean
-            )
-            {
-                this.progress = progress
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar)
-            {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar)
-            {
-                wv.settings.textZoom = progress
-                rukuTopPadding = -25 - (progress - 100) / 5
-                ayahContainerSize = 0.85 + (progress - 100) / 50
-                wv.loadUrl("javascript:updateRukuContainer($rukuTopPadding, $ayahContainerSize)")
-            }
-        })
+        sb.setOnSeekBarChangeListener(sbListener)
 
         tts.setOnUtteranceProgressListener(object : UtteranceProgressListener()
         {
@@ -616,11 +627,10 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                     val inflater = LayoutInflater.from(mainActivity)
                     val view = inflater.inflate(R.layout.dialog_settings, null, false).apply {
 
-                        var script = ""
                         var scriptFont = ""
                         var translation = ""
                         var translationFont = ""
-                        var scriptText = ""
+                        var scriptText = Constants.SCRIPTS.values.toList()[0]
                         var translatedText = ""
 
                         val spScriptFont: Spinner = findViewById(R.id.spScriptFont)
@@ -631,56 +641,11 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                         val btSave: Button = findViewById(R.id.btSave)
                         val ibClose: ImageButton = findViewById(R.id.ibClose)
 
-                        fun getSettings() {
-                            Constants.CURRENT_SCRIPT = Constants.SCRIPTS.keys.toList()[0]
-                            script = Constants.SCRIPTS.keys.toList()[0]
-                            scriptText = Constants.SCRIPTS.values.toList()[0]
-
-                            Constants.CURRENT_SCRIPT_FONT = sharedPreferences.getString(
-                                Constants.KEY_SCRIPT_FONT,
-                                Constants.AR_FONTS.values.toList()[0]
-                            )!!
-                            spScriptFont.setSelection(
-                                Constants.AR_FONTS.values.toList().indexOf(Constants.CURRENT_SCRIPT_FONT)
-                            )
-
-                            Constants.CURRENT_TRANSLATION = sharedPreferences.getString(
-                                Constants.KEY_TRANSLATION,
-                                Constants.TRANSLATIONS.keys.toList()[0]
-                            )!!
-                            spTranslation.setSelection(
-                                Constants.TRANSLATIONS.keys.toList().indexOf(Constants.CURRENT_TRANSLATION)
-                            )
-
-                            Constants.CURRENT_TRANSLATION_FONT = sharedPreferences.getString(
-                                Constants.KEY_TRANSLATION_FONT,
-                                Constants.EN_FONTS.values.toList()[0]
-                            )!!
-                            when (Constants.CURRENT_TRANSLATION) {
-                                "en" -> spTranslationFont.setSelection(
-                                    Constants.EN_FONTS.values.toList().indexOf(Constants.CURRENT_TRANSLATION_FONT)
-                                )
-                                "ur" -> spTranslationFont.setSelection(
-                                    Constants.UR_FONTS.values.toList().indexOf(Constants.CURRENT_TRANSLATION_FONT)
-                                )
-                            }
-
-                            Constants.CURRENT_ZOOM = sharedPreferences.getInt(
-                                Constants.KEY_ZOOM,
-                                100
-                            )
-                            CoroutineScope(Dispatchers.IO).launch {
-                                delay(TimeUnit.SECONDS.toMillis(0.5.toLong()))
-                                withContext(Dispatchers.Main) {
-                                    sbFontSize.progress = Constants.CURRENT_ZOOM
-                                }
-                            }
-                        }
-
-                        fun print() {
+                        fun printEg() {
                             val style = "<style>\n" +
-                                    "@import url('https://fonts.googleapis.com/css2?family=Ubuntu&family=Open+Sans&family=Poppins&family=Merriweather&family=Lora&display=swap');\n" +
-                                    "@import url('https://fonts.googleapis.com/css2?family=Tajawal&family=Amiri:wght@700&family=Almarai&family=Lateef&family=Scheherazade:wght@700&family=Harmattan&family=Mirza:wght@500&display=swap');\n" +
+                                    "@import url('https://fonts.googleapis.com/css2?family=Arial&family=Scheherazade:wght@700&family=Lateef&family=Mirza&display=swap');\n" +
+                                    "@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Poppins&family=Georgia&family=Times+New+Roman&display=swap');\n" +
+                                    "@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&family=Lohit+Devanagari&family=Samarkan&family=Hind&family=Kalam&display=swap');\n" +
                                     "@font-face {\n" +
                                     "   font-family: 'indopak_font';\n" +
                                     "   src: url('file:///android_asset/indopak_font.woff');\n" +
@@ -690,14 +655,14 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                                     "   text-align-last: center;\n" +
                                     "}\n" +
                                     "body {\n" +
-//                                    "   display: flex;\n" +
-//                                    "   justify-content: center;\n" +
-//                                    "   align-items: center;\n" +
-//                                    "   min-height: 100vh;\n" +
-//                                    "   margin: 0;\n" +
-//                                    "   padding: 16px;\n" +
-//                                    "   flex-direction: column;\n" +
-//                                    "   text-align: center;\n" +
+                                    "   display: flex;\n" +
+                                    "   justify-content: center;\n" +
+                                    "   align-items: center;\n" +
+                                    "   min-height: 100vh;\n" +
+                                    "   margin: 0;\n" +
+                                    "   padding: 16px;\n" +
+                                    "   flex-direction: column;\n" +
+                                    "   text-align: center;\n" +
                                     "   background-color: #873ed511;\n" +
                                     "}\n" +
                                     ".ar {\n" +
@@ -707,12 +672,26 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                                     "   font-size: 175%;\n" +
                                     "   direction: rtl;\n" +
                                     "}\n" +
+                                    ".hi {\n" +
+                                    "   font-family: $translationFont;\n" +
+                                    "   font-size: 150%;\n" +
+                                    "   padding-top: 5px;\n" +
+                                    "   padding-bottom: 10px;\n" +
+                                    "   direction: rtl;\n" +
+                                    "}\n" +
                                     ".ur {\n" +
                                     "   font-family: $translationFont;\n" +
                                     "   font-size: 150%;\n" +
                                     "   padding-top: 5px;\n" +
                                     "   padding-bottom: 10px;\n" +
                                     "   direction: rtl;\n" +
+                                    "}\n" +
+                                    ".id {\n" +
+                                    "   font-family: $translationFont;\n" +
+                                    "   font-size: 100%;\n" +
+                                    "   padding-top: 5px;\n" +
+                                    "   padding-bottom: 10px;\n" +
+                                    "   direction: ltr;\n" +
                                     "}\n" +
                                     ".en {\n" +
                                     "   font-family: $translationFont;\n" +
@@ -751,6 +730,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                             ).toString()
                         }
 
+                        //region set spinner adapters
                         val scriptFontAdapter: ArrayAdapter<String> =
                             ArrayAdapter<String>(
                                 activity!!,
@@ -777,9 +757,41 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                             )
                         translationFontAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         spTranslationFont.adapter = translationFontAdapter
+                        //endregion
 
-                        getSettings()
+                        //region set selected settings options
+                        spScriptFont.setSelection(
+                            Constants.AR_FONTS.values.toList().indexOf(Constants.CURRENT_SCRIPT_FONT)
+                        )
 
+                        spTranslation.setSelection(
+                            Constants.TRANSLATIONS.keys.toList().indexOf(Constants.CURRENT_TRANSLATION)
+                        )
+
+                        when (Constants.CURRENT_TRANSLATION) {
+                            "en" -> spTranslationFont.setSelection(
+                                Constants.EN_FONTS.values.toList().indexOf(Constants.CURRENT_TRANSLATION_FONT)
+                            )
+                            "hi" -> spTranslationFont.setSelection(
+                                Constants.HI_FONTS.values.toList().indexOf(Constants.CURRENT_TRANSLATION_FONT)
+                            )
+                            "id" -> spTranslationFont.setSelection(
+                                Constants.ID_FONTS.values.toList().indexOf(Constants.CURRENT_TRANSLATION_FONT)
+                            )
+                            "ur" -> spTranslationFont.setSelection(
+                                Constants.UR_FONTS.values.toList().indexOf(Constants.CURRENT_TRANSLATION_FONT)
+                            )
+                        }
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            delay(TimeUnit.SECONDS.toMillis(0.5.toLong()))
+                            withContext(Dispatchers.Main) {
+                                sbFontSize.progress = Constants.CURRENT_ZOOM
+                            }
+                        }
+                        //endregion
+
+                        //region click listeners
                         spScriptFont.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                             override fun onItemSelected(
                                 parent: AdapterView<*>?,
@@ -788,7 +800,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                                 id: Long
                             ) {
                                 scriptFont = Constants.AR_FONTS.values.toList()[position]
-                                print()
+                                printEg()
                             }
 
                             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -807,10 +819,12 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                                 translationFontAdapter.clear()
                                 when (translation) {
                                     "en" -> translationFontAdapter.addAll(Constants.EN_FONTS.keys.toList())
+                                    "hi" -> translationFontAdapter.addAll(Constants.HI_FONTS.keys.toList())
+                                    "id" -> translationFontAdapter.addAll(Constants.ID_FONTS.keys.toList())
                                     "ur" -> translationFontAdapter.addAll(Constants.UR_FONTS.keys.toList())
                                 }
                                 translationFontAdapter.notifyDataSetChanged()
-                                print()
+                                printEg()
                             }
 
                             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -826,9 +840,11 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                             ) {
                                 when (translation) {
                                     "en" -> translationFont = Constants.EN_FONTS.values.toList()[position]
+                                    "hi" -> translationFont = Constants.HI_FONTS.values.toList()[position]
+                                    "id" -> translationFont = Constants.ID_FONTS.values.toList()[position]
                                     "ur" -> translationFont = Constants.UR_FONTS.values.toList()[position]
                                 }
-                                print()
+                                printEg()
                             }
 
                             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -851,20 +867,32 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                         })
 
                         btSave.setOnClickListener {
-                            val editor = sharedPreferences.edit()
-                            editor.putString(Constants.KEY_SCRIPT, script)
-                            editor.putString(Constants.KEY_SCRIPT_FONT, scriptFont)
-                            editor.putString(Constants.KEY_TRANSLATION, translation)
-                            editor.putString(Constants.KEY_TRANSLATION_FONT, translationFont)
-                            editor.putInt(
-                                Constants.KEY_ZOOM, wv.settings.textZoom
-                            )
-                            editor?.apply()
+                            mainActivity.hideDialog()
+
+                            val isSubscribed = sharedPreferences.getBoolean(Constants.KEY_IS_SUBSCRIBED, false)
+                            if (isSubscribed) {
+                                Constants.CURRENT_SCRIPT_FONT = scriptFont
+                                Constants.CURRENT_TRANSLATION = translation
+                                Constants.CURRENT_TRANSLATION_FONT = translationFont
+                                Constants.CURRENT_ZOOM = sbFontSize.progress
+
+                                this@QuranFragment.print()
+
+                                val editor = sharedPreferences.edit()
+                                editor.putString(Constants.KEY_SCRIPT_FONT, scriptFont)
+                                editor.putString(Constants.KEY_TRANSLATION, translation)
+                                editor.putString(Constants.KEY_TRANSLATION_FONT, translationFont)
+                                editor.putInt(
+                                    Constants.KEY_ZOOM, sbFontSize.progress
+                                )
+                                editor?.apply()
+                            }
                         }
 
                         ibClose.setOnClickListener {
                             mainActivity.hideDialog()
                         }
+                        //endregion
                     }
                     mainActivity.showCustomDialog(layout = view)
                 }

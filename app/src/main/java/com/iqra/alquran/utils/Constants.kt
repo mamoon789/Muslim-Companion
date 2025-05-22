@@ -31,7 +31,6 @@ object Constants {
 
     //region keys for intent & preferences
     const val KEY_SHOWCASE = "SHOWCASE"
-    const val KEY_SCRIPT = "SCRIPT"
     const val KEY_SCRIPT_FONT = "SCRIPT_FONT"
     const val KEY_TRANSLATION = "TRANSLATION"
     const val KEY_TRANSLATION_FONT = "TRANSLATION_FONT"
@@ -48,7 +47,6 @@ object Constants {
     //endregion
 
     //region global variables for quran
-    var CURRENT_SCRIPT = ""
     var CURRENT_SCRIPT_FONT = ""
     var CURRENT_TRANSLATION = ""
     var CURRENT_TRANSLATION_FONT = ""
@@ -60,35 +58,46 @@ object Constants {
         "indopak" to "بِسۡمِ اللهِ الرَّحۡمٰنِ الرَّحِيۡم",
     )
     val TRANSLATIONS = mapOf(
-        "en" to "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
+        "en" to "In the name of Allah, the Entirely Merciful, the Especially Merciful",
+        "hi" to "अल्लाह के नाम से जो रहमान व रहीम है।",
+        "id" to "Dengan menyebut nama Allah Yang Maha Pemurah lagi Maha Penyayang",
         "ur" to "اللہ کے نام سےشروع جو نہایت مہربان ہمیشہ رحم فرمانےوالا ہے"
     )
     val AR_FONTS = mapOf(
-        "font 5" to "Scheherazade",
-        "font 8" to "font"
-//        "font 1" to "Tajawal",
-//        "font 2" to "Amiri",
-//        "font 3" to "Almarai",
-//        "font 4" to "Lateef",
-//        "font 6" to "Harmattan",
-//        "font 7" to "Mirza",
+        "font 1" to "Arial",
+        "font 2" to "Scheherazade",
+        "font 3" to "Lateef",
+//        "font 4" to "Mirza",
+//        "font 5" to "Markazi Text",
     )
     val EN_FONTS = mapOf(
-        "font 1" to "Ubuntu",
+        "font 1" to "Roboto",
         "font 2" to "Open Sans",
         "font 3" to "Poppins",
-        "font 4" to "Merriweather",
-        "font 5" to "Lora"
+        "font 4" to "Georgia",
+        "font 5" to "Times New Roman",
     )
+    val HI_FONTS = mapOf(
+        "font 1" to "Noto Sans Devanagari",
+        "font 2" to "Lohit Devanagari",
+        "font 3" to "Samarkan",
+        "font 4" to "Hind",
+        "font 5" to "Kalam"
+    )
+
+    val ID_FONTS = mapOf(
+        "font 1" to "Roboto",
+        "font 2" to "Open Sans",
+        "font 3" to "Poppins",
+        "font 4" to "Georgia",
+        "font 5" to "Times New Roman",
+    )
+
     val UR_FONTS = mapOf(
-        "font 1" to "Tajawal",
-        "font 2" to "Amiri",
-        "font 3" to "Almarai",
-        "font 4" to "Lateef",
-        "font 5" to "Scheherazade",
-        "font 6" to "Harmattan",
-        "font 7" to "Mirza",
-        "font 8" to "font"
+        "font 1" to "Arial",
+        "font 2" to "Scheherazade",
+        "font 3" to "Lateef",
+        "font 4" to "Mirza",
     )
     //endregion
 }
