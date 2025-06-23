@@ -48,7 +48,6 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="${ADMOB_APP_ID}" />
-<!--            android:value="ca-app-pub-1035415808955400~4363601783" />-->
 
         <activity
             android:name="com.iqra.alquran.views.MainActivity"

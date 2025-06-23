@@ -29,7 +29,6 @@
     <string name="live_mecca">Live Mecca</string>
     <string name="live_medina">Live Medina</string>
     <string name="review">Review</string>
-    <string name="remove_ads" translatable="false">AD</string>
     <string name="loading">Loading</string>
     <string name="loading_ad">Loading Ad</string>
     <string name="please_wait">Please wait</string>
@@ -47,7 +46,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="share">Share</string>
-    <string name="premium">Go Premium</string>
+    <string name="go_premium">Go Pro</string>
+    <string name="premium">Pro Version</string>
     <string name="support">Support Us!</string>
     <string name="charges">now for <font color="#AFBF77" size="18"><b>$1/m</b> </font></string>
     <string name="charges_fake"><b>$4/m</b></string>
@@ -56,6 +56,7 @@
     <string name="upgrade">Tired of Ads. Upgrade to premium and enjoy ad-free smooth experience.</string>
     <string name="donate">Help us in Da\'wah. Donate as little as <font color="#AFBF77" size="18"><b>$1/m</b></font> by subscribing.</string>
     <string name="no_ads">No Ads !</string>
+    <string name="remove_ads">Remove Ads !</string>
     <string name="zakat_calculated">Your calculated Zakat is</string>
     <string name="in">in</string>
     <string name="share_data">Get Quran, Hadiths, Prayer Times, Qibla Compass, and more, all in one app.\n\n
@@ -63,6 +64,7 @@
         https://play.google.com/store/apps/details?id=com.myisolutions.quran
     </string>
     <string name="store_url">https://play.google.com/store/apps/details?id=com.myisolutions.quran</string>
+    <string name="store_url_pro">https://play.google.com/store/apps/details?id=com.myisolutions.quran.pro</string>
     <string-array name="nisab_keys">
         <item>Gold</item>
         <item>Silver</item>

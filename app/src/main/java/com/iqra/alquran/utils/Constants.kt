@@ -2,8 +2,8 @@ package com.iqra.alquran.utils
 
 object Constants {
     //region keys for youtube & test ads
-    const val VIDEO_ID_MECCA = "wkmIFbf_R_s"
-    const val VIDEO_ID_MEDINA = "NfEglaLYDwc"
+    const val VIDEO_ID_MECCA = "Cw6mSasHCaw"
+    const val VIDEO_ID_MEDINA = "evW8tRxYerU"
     const val APPOPEN_AD_ID = "ca-app-pub-3940256099942544/3419835294"
     const val INTERSTITIAL_AD_ID = "ca-app-pub-3940256099942544/1033173712"
     const val NATIVE_AD_ID = "ca-app-pub-3940256099942544/2247696110"

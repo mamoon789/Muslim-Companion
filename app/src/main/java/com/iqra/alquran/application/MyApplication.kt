@@ -36,7 +36,7 @@ MyApplication : Application()
     {
         super.onCreate()
 
-        sharedPreferences = getSharedPreferences(getString(R.string.settings), Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE)
         sharedPreferences.apply {
             if(BuildConfig.FLAVOR == "pro") {
                 edit().putBoolean(Constants.KEY_IS_SUBSCRIBED, true).apply()

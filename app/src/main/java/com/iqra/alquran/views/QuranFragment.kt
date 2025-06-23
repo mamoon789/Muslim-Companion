@@ -40,7 +40,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
     lateinit var btPlayback: ToggleButton
     lateinit var btBookmark: ToggleButton
 
-    lateinit var tts: TextToSpeech
+    var tts: TextToSpeech? = null
     var mp: MediaPlayer? = null
 
     lateinit var mainActivity: MainActivity
@@ -409,7 +409,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                     {
                         mp?.release()
                         mp = null
-                        tts.stop()
+                        tts?.stop()
 
                         mp = MediaPlayer()
                         mp?.setAudioAttributes(
@@ -435,7 +435,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
 
         sb.setOnSeekBarChangeListener(sbListener)
 
-        tts.setOnUtteranceProgressListener(object : UtteranceProgressListener()
+        tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener()
         {
             override fun onStart(utteranceId: String?)
             {
@@ -454,7 +454,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                     audioRunning = false
                     mp?.release()
                     mp = null
-                    tts.stop()
+                    tts?.stop()
                 }
             }
 
@@ -484,9 +484,9 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
 
             mp?.release()
             mp = null
-            tts.stop()
+            tts?.stop()
 
-            val result = tts.setLanguage(Locale(Constants.CURRENT_TRANSLATION))
+            val result = tts?.setLanguage(Locale(Constants.CURRENT_TRANSLATION))
             if (!translationActive || result == TextToSpeech.LANG_AVAILABLE)
             {
                 print()
@@ -554,7 +554,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                 audioRunning = false
                 mp?.release()
                 mp = null
-                tts.stop()
+                tts?.stop()
             }
         }
     }
@@ -592,7 +592,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
             val params = Bundle().apply {
                 putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "a")
             }
-            tts.speak(
+            tts?.speak(
                 surahs[surahIndex].ayahs[ayahIndex].translation,
                 TextToSpeech.QUEUE_FLUSH,
                 params,
@@ -607,14 +607,14 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
             audioRunning = false
             mp?.release()
             mp = null
-            tts.stop()
+            tts?.stop()
         }
     }
 
     override fun onResume()
     {
         super.onResume()
-        tts.setLanguage(Locale(Constants.CURRENT_TRANSLATION))
+        tts?.setLanguage(Locale(Constants.CURRENT_TRANSLATION))
         mainActivity.toolbar.inflateMenu(R.menu.menu3)
         mainActivity.toolbar.setOnMenuItemClickListener {
             when(it.itemId) {
@@ -901,7 +901,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
                     audioRunning = false
                     mp?.release()
                     mp = null
-                    tts.stop()
+                    tts?.stop()
                     mainActivity.showCustomDialog(
                         title = "Translation Audio Settings",
                         message = "To change language, follow these steps: \n\n" +
@@ -943,7 +943,7 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
         audioRunning = false
         mp?.release()
         mp = null
-        tts.stop()
+        tts?.stop()
     }
 
     override fun onStop()
@@ -951,13 +951,13 @@ class QuranFragment : Fragment(), MediaPlayer.OnPreparedListener, MediaPlayer.On
         super.onStop()
         mp?.release()
         mp = null
-        tts.stop()
+        tts?.stop()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        tts.shutdown()
+        tts?.shutdown()
     }
 
     companion object

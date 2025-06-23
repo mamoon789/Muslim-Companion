@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "965531149815",
     "project_id": "al-quran-karim-a299c",
-    "storage_bucket": "al-quran-karim-a299c.appspot.com"
+    "storage_bucket": "al-quran-karim-a299c.firebasestorage.app"
   },
   "client": [
     {
@@ -26,7 +26,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:965531149815:android:2f4f2f9b754c62e3fb7af2",
+        "mobilesdk_app_id": "1:965531149815:android:4b33b7d375f9f503fb7af2",
         "android_client_info": {
           "package_name": "com.myisolutions.quran.pro"
         }

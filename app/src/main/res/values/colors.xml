@@ -20,4 +20,5 @@
     <color name="red">#FF0000</color>
     <color name="yellow">#fec107</color>
     <color name="showcase_bg">#dd000000</color>
+    <color name="ic_launcher_background">#813D75</color>
 </resources>

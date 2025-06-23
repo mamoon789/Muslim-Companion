@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         }
 
         sharedPreferences = getSharedPreferences(
-            getString(R.string.settings),
+            "Settings",
             Context.MODE_PRIVATE
         )
 
@@ -184,6 +184,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
         if (BuildConfig.FLAVOR == "free")
         {
             billing = Billing(this)
+            goPremium.text = getString(R.string.go_premium)
+            goPremiumMsg.text = getString(R.string.remove_ads)
+        } else {
+            goPremium.text = getString(R.string.premium)
+            goPremiumMsg.text = getString(R.string.no_ads)
         }
 
         surahs = Utility.getQuran(this).data.surahs
@@ -415,7 +420,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener
                 {
                     firebaseAnalytics.logEvent("review_app", null)
                     val intent = Intent(Intent.ACTION_VIEW).apply {
-                        data = Uri.parse(getString(R.string.store_url))
+                        if(BuildConfig.FLAVOR == "free")
+                        {
+                            data = Uri.parse(getString(R.string.store_url))
+                        } else {
+                            data = Uri.parse(getString(R.string.store_url_pro))
+                        }
                     }
                     startActivity(intent)
                 }
